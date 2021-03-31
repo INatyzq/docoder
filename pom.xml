@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.6.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>cn.yangzq</groupId>
+    <artifactId>docoder</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>docoder</name>
+    <description>docoder 聚合父工程</description>
+
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>docoder-code-generator</module>
+        <module>docoder-common</module>
+        <module>docoder-infrastructure</module>
+        <module>docoder-service</module>
+    </modules>
+
+    <properties>
+        <skipTests>true</skipTests>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-boot.version>2.3.6.RELEASE</spring-boot.version>
+        <spring-cloud.version>Hoxton.SR9</spring-cloud.version>
+        <cloud-alibaba.version>2.2.3.RELEASE</cloud-alibaba.version>
+        <shiro.version>1.7.1</shiro.version>
+        <shiro-redis.version>3.1.0</shiro-redis.version>
+        <mybatis-plus.version>3.4.1</mybatis-plus.version>
+        <druid.version>1.1.16</druid.version>
+        <velocity.version>2.0</velocity.version>
+        <mssql-jdbc.version>8.4.0.jre8</mssql-jdbc.version>
+        <feign-okhttp.version>11.0</feign-okhttp.version>
+        <guava.version>29.0-jre</guava.version>
+        <hutool.version>5.5.1</hutool.version>
+        <jwt.version>3.10.0</jwt.version>
+        <mapstruct.version>1.3.1.Final</mapstruct.version>
+        <easy-captcha.version>1.6.2</easy-captcha.version>
+        <commons-net.version>3.6</commons-net.version>
+        <swagger.fox.version>2.9.2</swagger.fox.version>
+        <swagger-bootstrap.version>1.9.6</swagger-bootstrap.version>
+    </properties>
+
+    <dependencies>
+        <!--配置文件处理器-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!--监控-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <!--Lombok-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--springboot 热部署工具-->
+        <!--<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>-->
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- spring cloud 依赖 -->
+            <!--<dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>-->
+            <!-- spring cloud alibaba 依赖 -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <finalName>${project.name}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <!-- 环境标识，需要与配置文件的名称相对应 -->
+                <profiles.active>dev</profiles.active>
+            </properties>
+            <activation>
+                <!-- 默认环境 -->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <!-- 环境标识，需要与配置文件的名称相对应 -->
+                <profiles.active>test</profiles.active>
+            </properties>
+            <activation>
+                <!-- 默认环境 -->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
+</project>

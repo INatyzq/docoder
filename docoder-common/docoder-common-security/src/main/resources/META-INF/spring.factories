@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  cn.yangzq.docoder.common.security.SecurityComponentConfig

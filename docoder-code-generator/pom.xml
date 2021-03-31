@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>docoder</artifactId>
+        <groupId>cn.yangzq</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>docoder-code-generator</artifactId>
+
+    <description>mybatis plus逆向工程模块</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>cn.yangzq</groupId>
+            <artifactId>docoder-common-mybatis</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.0.0-beta7</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+
+</project>

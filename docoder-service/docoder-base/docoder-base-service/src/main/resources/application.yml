@@ -1,0 +1,31 @@
+server:
+  port: 9001
+
+spring:
+  application:
+    name: @artifactId@
+  cloud:
+    nacos:
+      discovery:
+        enabled: true
+        server-addr: 127.0.0.1:8848
+        register-enabled: true
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password: 123456
+
+dubbo:
+  scan:
+    base-packages: cn.yangzq.docoder.base.service
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    address: spring-cloud://localhost
+  application:
+    qos-enable: true
+  cloud:
+    subscribed-services: /
+

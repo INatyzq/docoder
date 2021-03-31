@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>docoder-service</artifactId>
+        <groupId>cn.yangzq</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>docoder-user</artifactId>
+    <packaging>pom</packaging>
+    <description>user 服务父工程</description>
+
+    <modules>
+        <module>docoder-user-api</module>
+        <module>docoder-user-service</module>
+    </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>copy-dependencies</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>copy-dependencies</goal>
+                            </goals>
+                            <configuration>
+                                <!--target/lib是依赖jar包的输出目录，根据自己喜好配置-->
+                                <outputDirectory>D:\workspace\Java\lib</outputDirectory>
+                                <excludeTransitive>false</excludeTransitive>
+                                <stripVersion>false</stripVersion>
+                                <includeScope>runtime</includeScope>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <!--打包时去除第三方依赖-->
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <configuration>
+                        <layout>ZIP</layout>
+                        <includes>
+                            <include>
+                                <groupId>non-exists</groupId>
+                                <artifactId>non-exists</artifactId>
+                            </include>
+                        </includes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+
+</project>
