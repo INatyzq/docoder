@@ -12,6 +12,10 @@ public class AuthException extends BasicException{
         super(401,msg);
     }
 
+    public AuthException(String msg,boolean isHandle){
+        super(msg,isHandle);
+    }
+
     public AuthException(int code, String msg){
         super(code,msg);
     }

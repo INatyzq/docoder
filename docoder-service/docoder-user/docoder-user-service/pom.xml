@@ -31,11 +31,11 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<!--common-security-->
-		<!--<dependency>
+		<dependency>
 			<groupId>cn.yangzq</groupId>
 			<artifactId>docoder-common-security</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-		</dependency>-->
+		</dependency>
 		<!--common-mybatis-->
 		<dependency>
 			<groupId>cn.yangzq</groupId>

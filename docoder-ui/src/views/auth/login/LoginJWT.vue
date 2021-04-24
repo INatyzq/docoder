@@ -6,14 +6,14 @@
     <vs-input
       v-validate="'required|min:6'"
       data-vv-validate-on="blur"
-      name="account"
+      name="userName"
       icon-no-border
       icon="icon icon-user"
       icon-pack="feather"
       label-placeholder="用户名/邮箱"
-      v-model="account"
+      v-model="userName"
       class="w-full"/>
-    <span class="text-danger text-sm">{{ errors.first('account') }}</span>
+    <span class="text-danger text-sm">{{ errors.first('userName') }}</span>
 
     <vs-input
       data-vv-validate-on="blur"
@@ -91,7 +91,7 @@
     export default {
         data() {
             return {
-                account: 'admini',
+                userName: 'admini',
                 userPwd: '123456',
                 checkbox_remember_me: false,
                 error: ''
@@ -116,10 +116,10 @@
 
                 let originalPwd = this.userPwd;
                 const payload = {
-                    url:'/system/sysUser/login',
+                    url:'/user/login',
                     userDetails : {
-                        account: this.account,
-                        userPwd: this.userPwd = this.$md5(this.userPwd),
+                        userName: this.userName,
+                        userPwd: this.$md5(this.userPwd),
                         rememberMe: this.checkbox_remember_me,
                     }
                 }
@@ -132,10 +132,10 @@
                         that.$router.push('/app')
                     } else {
                         if (res.code == '9405') {
-                            that.$router.push('/side/auth/email_confirm/' + that.account)
+                            that.$router.push('/side/auth/email_confirm/' + that.userName)
                         } else {
                             if(res.code=='9406'){
-                                that.$validator.errors.add({'field': 'account', 'msg': res.msg})
+                                that.$validator.errors.add({'field': 'userName', 'msg': res.msg})
                             }
                             if(res.code=='9407'){
                                 that.$validator.errors.add({'field': 'userPwd', 'msg': res.msg})

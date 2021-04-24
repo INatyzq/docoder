@@ -7,15 +7,19 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.yangzq.docoder.base.iservice.IActionCodeService;
 import cn.yangzq.docoder.base.iservice.ISecurityService;
+import cn.yangzq.docoder.common.core.exception.AuthException;
 import cn.yangzq.docoder.common.core.exception.ValidateException;
 import cn.yangzq.docoder.common.core.utils.RedisUtil;
 import cn.yangzq.docoder.common.core.utils.ResultVo;
+import cn.yangzq.docoder.common.security.helper.AuthProvider;
+import cn.yangzq.docoder.user.config.DocoderConfig;
 import cn.yangzq.docoder.user.entity.SysUser;
 import cn.yangzq.docoder.user.form.UserLoginForm;
 import cn.yangzq.docoder.user.form.UserRegisterForm;
 import cn.yangzq.docoder.user.maputil.FormToPOMapper;
 import cn.yangzq.docoder.user.service.SysUserService;
 import cn.yangzq.docoder.user.vo.RegisterPrepareVO;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -23,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
 *@author yangzq
@@ -42,6 +47,10 @@ public class SysUserController {
     private IActionCodeService actionCodeService;
     @Autowired
     private SysUserService userService;
+    @Autowired
+    private DocoderConfig docoderConfig;
+    @Autowired
+    private AuthProvider authProvider;
 
 
     @GetMapping("/registerPrepare")
@@ -57,6 +66,34 @@ public class SysUserController {
 
     @PostMapping("/login")
     public ResultVo<Object> login(@RequestBody UserLoginForm form){
+        authProvider.authenticate().setAuthHeader("web_auth").
+                setCache("","")
+        .authError(true,"qwe");
+       /* String userName = form.getUserName();
+        String userPwd = form.getUserPwd();
+        userPwd = SecureUtil.md5(userPwd);
+
+        String jwtToken = JwtUtil.sign(userName, userPwd, form.isRememberMe());
+
+        QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
+        wrapper.eq("USER_NAME",userName);
+        wrapper.eq("USER_PWD",userPwd);
+        SysUser user = userService.getOne(wrapper);
+
+        JSONObject msg = JSONUtil.createObj();
+        if(user==null){
+            msg.set("userName",userName+"此账户不存在！");
+            throw new AuthException(msg.toString(),true);
+        }
+
+        if(!user.getUserPwd().equals(userPwd)){
+            msg.set("userPwd","密码不正确！");
+            throw new AuthException(msg.toString(),true);
+        }
+
+        long timeOut = form.isRememberMe()?docoderConfig.getTokenRememberTime():docoderConfig.getTokenTime();
+        redisUtil.setEx(SecurityConst.WEB_TOKEN_KEY+jwtToken,JSONUtil.toJsonStr(user),timeOut, TimeUnit.MILLISECONDS);
+*/
         return ResultVo.success();
     }
 

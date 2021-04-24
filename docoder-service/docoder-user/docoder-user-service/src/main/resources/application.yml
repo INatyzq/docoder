@@ -64,3 +64,10 @@ dubbo:
   consumer:
     check: false
 
+
+docoder:
+  token_time: 86400000
+  token_rememberme_time: 604800000
+  shiro:
+    excludeUrls: test
+
