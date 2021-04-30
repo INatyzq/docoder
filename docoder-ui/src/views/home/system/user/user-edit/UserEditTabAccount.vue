@@ -3,19 +3,29 @@
   Description: User Edit Information Tab content
   ----------------------------------------------------------------------------------------
   Item Name: Vuexy - Vuejs, HTML & Laravel Admin Dashboard Template
-  Author: Pixinvent
-  Author URL: http://www.themeforest.net/user/pixinvent
 ========================================================================================== -->
 
 <template>
   <div id="user-edit-tab-info">
 
-    <!-- Avatar Row -->
     <div class="vx-row">
+
       <div class="vx-col w-full">
         <div class="flex items-start flex-col sm:flex-row">
-          <img :src="data_local.userFeature.avatarUrl?'data:image/jpeg;base64,'+data_local.userFeature.avatarUrl:''"
+          <img :src="data_local.avatarUrl?'data:image/jpeg;base64,'+data_local.avatarUrl:''"
                :onerror="defaultAvatar" class="mr-8 rounded h-24 w-24"/>
+          <!-- <vs-avatar :src="data.avatar" size="80px" class="mr-4" /> -->
+          <div>
+            <p class="text-lg font-medium mb-2 mt-4 sm:mt-0">{{ data_local.userName  }}</p>
+
+            <input type="file" class="hidden" ref="update_avatar_input" accept="image/*">
+
+            <!-- Toggle comment of below buttons as one for actual flow & currently shown is only for demo -->
+            <vs-button class="mr-4 mb-4">修改</vs-button>
+            <!-- <vs-button type="border" class="mr-4" @click="$refs.update_avatar_input.click()">Change Avatar</vs-button> -->
+
+            <vs-button type="border" color="danger">移除</vs-button>
+          </div>
         </div>
       </div>
     </div>
@@ -37,20 +47,24 @@
 
       <div class="vx-col md:w-1/2 w-full">
 
-        <vs-list class="w-full mt-2">
+        <div class="w-full mt-4">
           <label class="vs-input--label">生日</label>
-          <datepicker :language="languages['zh']" format="yyyy-MM-dd" v-model="data_local.birthday"></datepicker>
-        </vs-list>
+          <datepicker :language="language['zh']" format="yyyy-MM-dd" v-model="data_local.birthday"></datepicker>
+        </div>
 
         <vs-input class="w-full mt-4" label="手机" v-model="data_local.phone" name="手机"/>
+        <span class="text-danger text-sm">{{ errors.first('phone') }}</span>
 
-        <vs-list class="w-full mt-4">
-          <label class="vs-input--label">性别</label>
-          <vs-row class="mt-2">
-            <vs-radio color="rgb(87, 251, 187)" v-model="data_local.sex" vs-value="1">男</vs-radio>
-            <vs-radio color="#e48346" v-model="data_local.sex" vs-value="2" class="ml-4">女</vs-radio>
-          </vs-row>
-        </vs-list>
+        <div class="w-full mt-4">
+          <label class="text-sm">性别</label>
+          <div class="mt-2">
+            <v-select v-model="data_local.sex" :options="[{label:'男',value:'1'},{label:'女',value:'0'}]" v-validate="'required'" name="sex" :dir="$vs.rtl ? 'rtl' : 'ltr'" />
+          </div>
+            <!--<div class="mt-4">
+              <vs-radio v-model="data_local.sex" vs-value="1" class="mr-4">男</vs-radio>
+              <vs-radio v-model="data_local.sex" vs-value="2" class="mr-4">女</vs-radio>
+            </div>-->
+        </div>
 
         <vs-input class="w-full mt-4" label="所在城市" v-model="data_local.address" name="所在城市"/>
       </div>
@@ -90,7 +104,7 @@
         },
         data() {
             return {
-                languages: lang,
+              language:lang,
                 data_local: JSON.parse(JSON.stringify(this.data)),
             }
         },

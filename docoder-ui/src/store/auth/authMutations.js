@@ -17,15 +17,9 @@ export default {
   // Updates user info in state and localstorage
   UPDATE_USER_INFO(state, payload) {
     if(payload){
-      if (payload.rememberMe) {
-        localStorage.setItem('userInfo', JSON.stringify(payload));
-        sessionStorage.setItem('userInfo', JSON.stringify(payload));
-      } else {
-        sessionStorage.setItem('userInfo', JSON.stringify(payload));
-      }
+      localStorage.setItem('userDetail', JSON.stringify(payload));
       state.userInfo = payload;
     }else{
-      sessionStorage.clear();
       localStorage.clear();
     }
   },

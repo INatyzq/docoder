@@ -203,7 +203,7 @@
             getListPage(){
                 this.$vs.loading();
                 let that = this;
-                getRequest('/system/sysUser/listPage',this.queryHelper.getParams()).then(function (res) {
+                getRequest('/user/listPage',this.queryHelper.getParams()).then(function (res) {
                   if(res.success){
                       that.listPage = res.data;
                   }

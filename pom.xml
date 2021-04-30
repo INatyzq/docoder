@@ -40,7 +40,8 @@
         <guava.version>29.0-jre</guava.version>
         <hutool.version>5.5.1</hutool.version>
         <jwt.version>3.10.0</jwt.version>
-        <mapstruct.version>1.3.1.Final</mapstruct.version>
+        <mapstruct.version>1.3.0.Final</mapstruct.version>
+        <lombok.version>1.18.10</lombok.version>
         <easy-captcha.version>1.6.2</easy-captcha.version>
         <commons-net.version>3.6</commons-net.version>
         <swagger.fox.version>2.9.2</swagger.fox.version>
@@ -64,6 +65,7 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
+            <version>${lombok.version}</version>
         </dependency>
 
         <!--springboot 热部署工具-->

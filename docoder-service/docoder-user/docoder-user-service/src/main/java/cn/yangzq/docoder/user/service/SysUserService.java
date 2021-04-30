@@ -1,7 +1,10 @@
 package cn.yangzq.docoder.user.service;
 
+import cn.yangzq.docoder.common.mybatis.utils.Pageable;
 import cn.yangzq.docoder.user.entity.SysUser;
+import cn.yangzq.docoder.user.form.UserLoginForm;
 import cn.yangzq.docoder.user.form.UserRegisterForm;
+import cn.yangzq.docoder.user.vo.UserDetailVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -16,4 +19,19 @@ public interface SysUserService extends IService<SysUser> {
     * @return 是否已存在
     */
     boolean isRepeat(UserRegisterForm form);
+
+    /**
+     * 登录
+     * @param form
+     * @return
+     */
+    UserDetailVO login(UserLoginForm form);
+
+    /**
+     * 获取用户分页列表
+     * @param user
+     * @param page
+     * @return
+     */
+    Pageable<SysUser> getUserPage(SysUser user, Pageable<SysUser> page);
 }

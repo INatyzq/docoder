@@ -4,8 +4,6 @@
   Component Name: VerticalNavMenu
   ----------------------------------------------------------------------------------------
   Item Name: Vuexy - Vuejs, HTML & Laravel Admin Dashboard Template
-    Author: Pixinvent
-  Author URL: http://www.themeforest.net/user/pixinvent
 ========================================================================================== -->
 
 
@@ -125,6 +123,7 @@
     import VNavMenuItem from './VerticalNavMenuItem.vue'
 
     import Logo from "../Logo.vue"
+    import userService from "@/service/userService";
 
     export default {
         name: 'v-nav-menu',
@@ -367,7 +366,7 @@
                 this.setVerticalNavMenuWidth()
             },
             buildMenuTree(){
-                let userInfo = this.$store.state.auth.userInfo;
+                let userInfo = userService.getUserDetail();
                 let permissionList = [];
                 if(userInfo){
                     permissionList = userInfo.permissionList;
@@ -431,5 +430,5 @@
 
 
 <style lang="scss">
-  @import "@/assets/scss/vuexy/components/verticalNavMenu.scss"
+  @import "@/assets/scss/vuexy/components/verticalNavMenu.scss";
 </style>

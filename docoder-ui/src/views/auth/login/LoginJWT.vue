@@ -131,15 +131,11 @@
                     if (res.success) {
                         that.$router.push('/app')
                     } else {
-                        if (res.code == '9405') {
-                            that.$router.push('/side/auth/email_confirm/' + that.userName)
-                        } else {
-                            if(res.code=='9406'){
-                                that.$validator.errors.add({'field': 'userName', 'msg': res.msg})
-                            }
-                            if(res.code=='9407'){
-                                that.$validator.errors.add({'field': 'userPwd', 'msg': res.msg})
-                            }
+                        if(res.isHandle){
+                          let data = JSON.parse(res.message);
+                          for(let field in data){
+                            that.$validator.errors.add({'field': field, 'msg': data[field]});
+                          }
                         }
                     }
                 })

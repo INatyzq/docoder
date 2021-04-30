@@ -1,10 +1,13 @@
 package cn.yangzq.docoder.common.security.security;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+
+import java.util.Date;
 
 /**
 *@author yangzq
@@ -12,7 +15,7 @@ import com.auth0.jwt.interfaces.JWTVerifier;
 **/
 public class JWTUtil {
 
-    private static final String SECRET_KEY = "UYEEK_EDU";
+    private static final String SECRET_KEY = "DOCODER";
     private static final String USER_ID = "USER_ID";
     private static final String USER_NAME = "USER_NAME";
 
@@ -72,15 +75,25 @@ public class JWTUtil {
      * desc 生成签名,给定时间后过期
      * params:
      */
-    public static String sign(String userId, String userName) {
+    public static String sign(String userId, String userName,Long expireSecond) {
         Algorithm algorithm = Algorithm.HMAC256(userId + SECRET_KEY);
         // 附带user信息
-        return JWT.create()
+        JWTCreator.Builder builder = JWT.create()
                 .withClaim(USER_ID, userId)
-                .withClaim(USER_NAME, userName)
-                //.withExpiresAt(expireTime)
-                .sign(algorithm);
+                .withClaim(USER_NAME, userName);
+        if(expireSecond!=null){
+            Date expireDate = new Date(System.currentTimeMillis() + expireSecond*1000);
+            builder.withExpiresAt(expireDate);
+        }
+        return builder.sign(algorithm);
 
+    }
+
+    public static void main(String[] args) {
+        String sign1 = JWTUtil.sign("123", "456",1000L);
+        String sign2 = JWTUtil.sign("123", "456",1000L);
+        System.out.println(sign1);
+        System.out.println(sign2);
     }
 
 }

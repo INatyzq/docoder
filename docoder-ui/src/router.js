@@ -3,13 +3,13 @@
   Description: Routes for vue-router. Lazy loading is enabled.
   ----------------------------------------------------------------------------------------
   Item Name: Vuexy - Vuejs, HTML & Laravel Admin Dashboard Template
-  Author: Pixinvent
-  Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 
 
 import Vue from 'vue'
 import Router from 'vue-router'
+import userService from "@/service/userService";
+import stringUtils from "@/core/utils/stringUtils";
 
 const originalPush = Router.prototype.push
 Router.prototype.push = function push(location) {
@@ -47,9 +47,9 @@ const router = new Router({
           component: () => import('@/views/home/system/PermissionManage.vue'),
           meta: {
             breadcrumb: [
-              { title: '主页' },
-              { title: '系统设置'},
-              { title: '权限管理',active: true }
+              {title: '主页'},
+              {title: '系统设置'},
+              {title: '权限管理', active: true}
             ],
             pageTitle: '权限管理',
             rule: 'editor'
@@ -61,9 +61,9 @@ const router = new Router({
           component: () => import('@/views/home/system/role/RoleManage.vue'),
           meta: {
             breadcrumb: [
-              { title: '主页' },
-              { title: '系统设置'},
-              { title: '角色管理',active: true }
+              {title: '主页'},
+              {title: '系统设置'},
+              {title: '角色管理', active: true}
             ],
             pageTitle: '角色管理',
             rule: 'editor'
@@ -75,9 +75,9 @@ const router = new Router({
           component: () => import('@/views/home/system/user/user-list/UserList.vue'),
           meta: {
             breadcrumb: [
-              { title: '主页' },
-              { title: '系统设置'},
-              { title: '用户列表',active: true }
+              {title: '主页'},
+              {title: '系统设置'},
+              {title: '用户列表', active: true}
             ],
             pageTitle: '用户列表'
           }
@@ -88,9 +88,9 @@ const router = new Router({
           component: () => import('@/views/home/system/user/UserView.vue'),
           meta: {
             breadcrumb: [
-              { title: '主页' },
-              { title: '系统设置'},
-              { title: '用户列表',active: true }
+              {title: '主页'},
+              {title: '系统设置'},
+              {title: '用户列表', active: true}
             ],
             pageTitle: '我的账户'
           }
@@ -101,10 +101,10 @@ const router = new Router({
           component: () => import('@/views/home/system/user/user-edit/UserEdit.vue'),
           meta: {
             breadcrumb: [
-              { title: '主页' },
-              { title: '系统设置'},
-              { title: '用户列表',url: '/app/home/system/user/user-list'},
-              { title: '用户详情',active: true }
+              {title: '主页'},
+              {title: '系统设置'},
+              {title: '用户列表', url: '/app/home/system/user/user-list'},
+              {title: '用户详情', active: true}
             ],
             pageTitle: '用户详情'
           }
@@ -188,7 +188,7 @@ router.afterEach(() => {
 
 router.beforeEach((to, from, next) => {
 
-  const isUserLoggedIn = router.app.$options.store.state.auth.userInfo;
+  const isUserLoggedIn = stringUtils.isNotBlank(userService.getUserDetail().token);
   if (
     !to.path.startsWith("/side/auth") &&
     to.path !== "/side/auth/login" &&

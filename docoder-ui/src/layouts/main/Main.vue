@@ -297,7 +297,6 @@
         },
         created() {
             //刷新userInfo
-            this.$store.dispatch('auth/refresh');
             const color = this.navbarColor === '#fff' && this.isThemeDark ? '#10163a' : this.navbarColor
             this.updateNavbarColor(color)
             this.setNavMenuVisibility(this.$store.state.mainLayoutType)

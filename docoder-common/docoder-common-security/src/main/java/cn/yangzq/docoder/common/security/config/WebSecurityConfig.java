@@ -1,6 +1,7 @@
 package cn.yangzq.docoder.common.security.config;
 
 import cn.yangzq.docoder.common.security.filter.TokenAuthenticationFilter;
+import cn.yangzq.docoder.common.security.handler.AuthenticationProvider;
 import cn.yangzq.docoder.common.security.security.UnauthorizedEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -27,10 +28,12 @@ import java.util.Collections;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private AuthenticationProvider authenticationProvider;
     private UnauthorizedEntryPoint unauthorizedEntryPoint;
 
     @Autowired
-    public WebSecurityConfig(UnauthorizedEntryPoint unauthorizedEntryPoint) {
+    public WebSecurityConfig(AuthenticationProvider authenticationProvider,UnauthorizedEntryPoint unauthorizedEntryPoint) {
+        this.authenticationProvider = authenticationProvider;
         this.unauthorizedEntryPoint = unauthorizedEntryPoint;
     }
 
@@ -52,7 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             //对preflight放行
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll().and()
             // 除上面外的所有请求全部需要鉴权认证
-            .addFilter(new TokenAuthenticationFilter(authenticationManager(), unauthorizedEntryPoint)).httpBasic();
+            .addFilter(new TokenAuthenticationFilter(authenticationManager(),authenticationProvider, unauthorizedEntryPoint)).httpBasic();
     }
 
     /**
@@ -61,7 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/api/**","/**/doc.html",
-                "/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**","/base/sys/sysUser/**","/app/login/deviceDetails/**"
+                "/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**"
                );
     }
 

@@ -33,17 +33,17 @@ public class CodeGenerator {
 
         // 3、数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:sqlserver://119.23.61.176:1433;DatabaseName=VMA_saas_dev;sslProtocol=TLSv1.2");
-        dsc.setDriverName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        dsc.setUsername("saas_dev");
-        dsc.setPassword("7$3@o6vz(hWO");
-        dsc.setDbType(DbType.SQL_SERVER);
+        dsc.setUrl("jdbc:mysql://47.106.119.6:3306/docoder_user?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&allowMultiQueries=true");
+        dsc.setDriverName("com.mysql.jdbc.Driver");
+        dsc.setUsername("root");
+        dsc.setPassword("123456");
+        dsc.setDbType(DbType.MYSQL);
         mpg.setDataSource(dsc);
 
         // 4、包配置
         PackageConfig pc = new PackageConfig();
-        pc.setParent("com.uyeek.edu.service.schin.app.teacher");
-        pc.setModuleName("base"); //模块名
+        pc.setParent("cn.yangzq.docoder");
+        pc.setModuleName("user"); //模块名
         pc.setController("controller");
         pc.setEntity("entity");
         pc.setService("service");
@@ -52,7 +52,7 @@ public class CodeGenerator {
 
         // 5、策略配置
         StrategyConfig strategy = new StrategyConfig();
-        strategy.setInclude("CLASS_CARD_NOTICE_IMAGES");
+        strategy.setInclude("sys_user");
         strategy.setNaming(NamingStrategy.underline_to_camel);//数据库表映射到实体的命名策略
         //strategy.setTablePrefix(pc.getModuleName() + "_"); //生成实体时去掉表前缀
 

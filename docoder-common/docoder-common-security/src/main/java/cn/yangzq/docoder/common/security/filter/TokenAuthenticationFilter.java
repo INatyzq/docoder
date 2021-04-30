@@ -1,5 +1,6 @@
 package cn.yangzq.docoder.common.security.filter;
 
+import cn.yangzq.docoder.common.security.handler.AuthenticationProvider;
 import cn.yangzq.docoder.common.security.security.UnauthorizedEntryPoint;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,28 +22,32 @@ import java.io.IOException;
 @Slf4j
 public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
 
+    private AuthenticationProvider authenticationProvider;
+
     private UnauthorizedEntryPoint unauthorizedEntryPoint;
 
-    public TokenAuthenticationFilter(AuthenticationManager authManager, UnauthorizedEntryPoint unauthorizedEntryPoint) {
+    public TokenAuthenticationFilter(AuthenticationManager authManager,AuthenticationProvider authenticationProvider, UnauthorizedEntryPoint unauthorizedEntryPoint) {
         super(authManager);
+        this.authenticationProvider = authenticationProvider;
         this.unauthorizedEntryPoint = unauthorizedEntryPoint;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws IOException, ServletException {
-
-        Authentication authentication = null;
+        boolean isDispatcher = false;
         try {
-            //authentication = authenticationProvider.getAuthentication(req,res);
+            isDispatcher = authenticationProvider.authentication(req,res);
         } catch (Exception e) {
             unauthorizedEntryPoint.commence(req,res,new BadCredentialsException(e.getMessage()));
             return;
         }
 
-        if (authentication != null) {
+        /*if (authentication != null) {
             SecurityContextHolder.getContext().setAuthentication(authentication);
+        }*/
+        if(!isDispatcher){
+            chain.doFilter(req, res);
         }
-        chain.doFilter(req, res);
     }
 }

@@ -37,11 +37,8 @@ public class SysUser implements Serializable {
     @ApiModelProperty(value = "昵称")
     private String nickname;
 
-    @ApiModelProperty(value = "名")
-    private String lastName;
-
-    @ApiModelProperty(value = "姓")
-    private String firstName;
+    @ApiModelProperty(value = "姓名")
+    private String fullName;
 
     @ApiModelProperty(value = "手机号码")
     private String phone;
@@ -56,13 +53,16 @@ public class SysUser implements Serializable {
     private Integer status = 1;
 
     @ApiModelProperty(value = "性别;1:男;0:女")
-    private boolean sex;
+    private Integer sex;
 
     @ApiModelProperty(value = "生日")
     private Date birthday;
 
     @ApiModelProperty(value = "身份证号")
     private String idCard;
+
+    @ApiModelProperty(value = "身份证号")
+    private String avatarUrl;
 
     @ApiModelProperty(value = " 创建人")
     private String createdBy;

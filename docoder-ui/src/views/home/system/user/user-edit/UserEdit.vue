@@ -24,7 +24,7 @@
               <user-edit-tab-account class="mt-4" :data="user_data"/>
             </div>
           </vs-tab>
-          <vs-tab label="社交个性" icon-pack="feather" icon="icon-user">
+          <!--<vs-tab label="社交个性" icon-pack="feather" icon="icon-user">
             <div class="tab-text">
               <user-edit-tab-feature class="mt-4" :data="user_data"/>
             </div>
@@ -38,7 +38,7 @@
             <div class="tab-text">
               <user-edit-tab-password-reset class="mt-4" :data="user_data"/>
             </div>
-          </vs-tab>
+          </vs-tab>-->
         </vs-tabs>
 
       </div>
@@ -56,10 +56,10 @@
 
     export default {
         components: {
-            UserEditTabRole,
-            UserEditTabFeature,
+            /*UserEditTabRole,
+            UserEditTabFeature,*/
             UserEditTabAccount,
-            UserEditTabPasswordReset
+            /*UserEditTabPasswordReset*/
         },
         data() {
             return {
@@ -87,7 +87,7 @@
                 }
                 this.$vs.loading();
                 let that = this;
-                getRequest('/system/sysUser/' + userId).then(function (res) {
+                getRequest('/user/' + userId).then(function (res) {
                     if (res.success) {
                         that.user_data = res.data;
                     } else {

@@ -2,7 +2,6 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/docoder-code-generator/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/docoder-code-generator/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/docoder-common/docoder-common-core/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/docoder-common/docoder-common-core/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/docoder-common/docoder-common-mybatis/src/main/java" charset="UTF-8" />
@@ -11,16 +10,9 @@
     <file url="file://$PROJECT_DIR$/docoder-common/docoder-common-security/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/docoder-common/docoder-common-swagger/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/docoder-common/docoder-common-swagger/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/docoder-infrastructure/docoder-nacos/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/docoder-infrastructure/docoder-nacos/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/docoder-infrastructure/docoder-sentinel/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/docoder-infrastructure/docoder-sentinel/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/docoder-service/docoder-base/docoder-base-api/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/docoder-service/docoder-base/docoder-base-api/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/docoder-service/docoder-base/docoder-base-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/docoder-service/docoder-base/docoder-base-service/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/docoder-service/docoder-user/docoder-user-api/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/docoder-service/docoder-user/docoder-user-api/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/docoder-service/docoder-user/docoder-user-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/docoder-service/docoder-user/docoder-user-service/src/main/resources" charset="UTF-8" />
   </component>

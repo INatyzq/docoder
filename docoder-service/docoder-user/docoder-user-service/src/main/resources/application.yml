@@ -40,9 +40,10 @@ spring:
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*.xml
+  type-aliases-package: cn.yangzq.docoder.user.entity
   global-config:
     db-config:
-      id-type: assign_uuid
+      id-type: auto
       table-underline: true
       logic-not-delete-value: 1
       logic-delete-value: -1
@@ -66,8 +67,10 @@ dubbo:
 
 
 docoder:
-  token_time: 86400000
-  token_rememberme_time: 604800000
-  shiro:
-    excludeUrls: test
+  token_time_second: 86400000
+  token_time_rememberme_second: 604800000
+  dispatcher_authentication_url: /user/login
+  token_header_key: web_token
+  web_cache_key_id: 'AUTH:WEB:ID:'
+  web_cache_key_token: 'AUTH:WEB:TOKEN:'
 
