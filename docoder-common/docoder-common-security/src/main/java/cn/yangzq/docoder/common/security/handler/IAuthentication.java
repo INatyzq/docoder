@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 *@author yangzq
 *@description 认证接口
 **/
-public interface IAuthentication {
+public abstract class IAuthentication {
 
     /**
      * 什么时候要求去认证
@@ -17,20 +17,20 @@ public interface IAuthentication {
      * @param redisUtil
      * @return
      */
-    boolean requireAuth(HttpServletRequest request,RedisUtil redisUtil);
+    public abstract boolean requireAuth(HttpServletRequest request,RedisUtil redisUtil);
 
     /**
      * 返回转发的认证url
      * @return 转发的认证url
      */
-    String dispatcherAuthenticationUrl();
+    public abstract String dispatcherAuthenticationUrl();
 
     /**
      * 是否允许访问
      * @param request
      * @return
      */
-    boolean allowAccess(HttpServletRequest request);
+    public abstract boolean allowAccess(HttpServletRequest request);
 
     /**
      * 访问拦截
@@ -38,7 +38,15 @@ public interface IAuthentication {
      * @param response
      * @param redisUtil
      */
-    void accessIntercept(HttpServletRequest request, HttpServletResponse response,RedisUtil redisUtil);
+    public abstract void accessIntercept(HttpServletRequest request, HttpServletResponse response,RedisUtil redisUtil);
 
+    /**
+     * 获取用户详情
+     * @param request
+     * @param redisUtil
+     * @param userDetailJsonStrLocal
+     * @return 用户详情
+     */
+    public abstract void setUserDetail(HttpServletRequest request,RedisUtil redisUtil,ThreadLocal<String> userDetailJsonStrLocal);
 
 }

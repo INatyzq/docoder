@@ -2,14 +2,14 @@
   <div class="the-navbar__user-meta flex items-center" v-if="activeUserInfo.userName">
 
     <div class="text-right leading-tight hidden sm:block">
-      <p class="font-semibold">{{ activeUserInfo.feature.nickName }}</p>
+      <p class="font-semibold">{{ activeUserInfo.nickName }}</p>
       <small>Available</small>
     </div>
 
     <vs-dropdown vs-custom-content vs-trigger-click class="cursor-pointer">
 
       <div class="con-img ml-3">
-        <img key="onlineImg" :src="activeUserInfo.feature.avatarUrl?'data:image/jpeg;base64,'+activeUserInfo.feature.avatarUrl:''" :onerror="defaultAvatar" alt="user-img" width="40"
+        <img key="onlineImg" :src="activeUserInfo.avatarUrl?'data:image/jpeg;base64,'+activeUserInfo.avatarUrl:''" :onerror="defaultAvatar" alt="user-img" width="40"
              height="40" class="rounded-full shadow-md cursor-pointer block"/>
       </div>
 
@@ -56,13 +56,15 @@
 </template>
 
 <script>
+    import userService from "@/service/userService";
+
     export default {
         data() {
             return {}
         },
         computed: {
             activeUserInfo() {
-                return this.$store.state.auth.userInfo||{};
+                return userService.getUserDetail()||{};
             },
             defaultAvatar(){
                 return 'this.src="'+require('../../../../assets/images/portrait/avatar.jpg')+'"';

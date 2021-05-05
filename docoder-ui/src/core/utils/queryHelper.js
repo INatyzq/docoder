@@ -1,24 +1,24 @@
 let queryHelper = {
   current: 1,
   size: 20,
-  refresh:function (cmp,methodName) {
+  refresh: function (cmp, methodName) {
     this.init();
     cmp[methodName]();
     cmp.$refs.filterCard.removeRefreshAnimation();
   },
-  getParams:function () {
+  getParams: function () {
     let params = {};
-    for(let key in this){
-      if(typeof(this[key])!='function') {
+    for (let key in this) {
+      if (typeof (this[key]) != 'function') {
         let val = this[key];
         params[key] = val ? val : null;
       }
     }
     return params;
   },
-  init:function () {
-    for(let key in this){
-      if(typeof(this[key])!='function') {
+  init: function () {
+    for (let key in this) {
+      if (typeof (this[key]) != 'function') {
         delete this[key];
       }
     }

@@ -16,13 +16,13 @@
                :onerror="defaultAvatar" class="mr-8 rounded h-24 w-24"/>
           <!-- <vs-avatar :src="data.avatar" size="80px" class="mr-4" /> -->
           <div>
-            <p class="text-lg font-medium mb-2 mt-4 sm:mt-0">{{ data_local.userName  }}</p>
+            <p class="text-lg font-medium mb-2 mt-4 sm:mt-0">{{ data_local.userName }}</p>
 
-            <input type="file" class="hidden" ref="update_avatar_input" accept="image/*">
+            <input type="file" name="file" class="hidden" ref="update_avatar_input" @change="updateAvatar" accept="image/*">
 
             <!-- Toggle comment of below buttons as one for actual flow & currently shown is only for demo -->
-            <vs-button class="mr-4 mb-4">修改</vs-button>
-            <!-- <vs-button type="border" class="mr-4" @click="$refs.update_avatar_input.click()">Change Avatar</vs-button> -->
+            <!--<vs-button class="mr-4 mb-4">修改</vs-button>-->
+            <vs-button type="border" class="mr-4" @click="$refs.update_avatar_input.click()">更换头像</vs-button>
 
             <vs-button type="border" color="danger">移除</vs-button>
           </div>
@@ -58,12 +58,13 @@
         <div class="w-full mt-4">
           <label class="text-sm">性别</label>
           <div class="mt-2">
-            <v-select v-model="data_local.sex" :options="[{label:'男',value:'1'},{label:'女',value:'0'}]" v-validate="'required'" name="sex" :dir="$vs.rtl ? 'rtl' : 'ltr'" />
+            <v-select v-model="data_local.sex" :options="[{label:'男',value:'1'},{label:'女',value:'0'}]"
+                      v-validate="'required'" name="sex" :dir="$vs.rtl ? 'rtl' : 'ltr'"/>
           </div>
-            <!--<div class="mt-4">
-              <vs-radio v-model="data_local.sex" vs-value="1" class="mr-4">男</vs-radio>
-              <vs-radio v-model="data_local.sex" vs-value="2" class="mr-4">女</vs-radio>
-            </div>-->
+          <!--<div class="mt-4">
+            <vs-radio v-model="data_local.sex" vs-value="1" class="mr-4">男</vs-radio>
+            <vs-radio v-model="data_local.sex" vs-value="2" class="mr-4">女</vs-radio>
+          </div>-->
         </div>
 
         <vs-input class="w-full mt-4" label="所在城市" v-model="data_local.address" name="所在城市"/>
@@ -84,57 +85,66 @@
 </template>
 
 <script>
-    import vSelect from 'vue-select';
-    import Datepicker from 'vuejs-datepicker';
-    import * as lang from 'vuejs-datepicker/src/locale';
-    import {postRequest} from "../../../../../core/http/axiosClient";
-    import notify from "../../../../../core/notify/notify";
-    import moment from 'moment';
+import vSelect from 'vue-select';
+import Datepicker from 'vuejs-datepicker';
+import * as lang from 'vuejs-datepicker/src/locale';
+import {postRequest} from "../../../../../core/http/axiosClient";
+import notify from "../../../../../core/notify/notify";
+import moment from 'moment';
 
-    export default {
-        components: {
-            vSelect,
-            Datepicker
-        },
-        props: {
-            data: {
-                type: Object,
-                required: true
-            }
-        },
-        data() {
-            return {
-              language:lang,
-                data_local: JSON.parse(JSON.stringify(this.data)),
-            }
-        },
-        computed: {
-            validateForm() {
-                return !this.errors.any()
-            },
-            defaultAvatar() {
-                return 'this.src="' + require('../../../../../assets/images/portrait/avatar.jpg') + '"';
-            }
-        },
-        methods: {
-            save_changes() {
-                /* eslint-disable */
-                if (!this.validateForm) return
-
-                this.$vs.loading();
-                delete this.data_local.userFeature;
-                this.data_local.birthday = moment(this.data_local.birthday).format('YYYY-MM-DD');
-                let that = this;
-                postRequest('/system/sysUser', this.data_local).then((res) => {
-                    if (res.success) {
-                        notify.success('保存操作完成！');
-                        that.$store.dispatch('auth/refresh');
-                    }
-                });
-            },
-            reset_data() {
-                this.data_local = JSON.parse(JSON.stringify(this.data))
-            }
-        }
+export default {
+  components: {
+    vSelect,
+    Datepicker
+  },
+  props: {
+    data: {
+      type: Object,
+      required: true
     }
+  },
+  data() {
+    return {
+      language: lang,
+      data_local: JSON.parse(JSON.stringify(this.data)),
+    }
+  },
+  computed: {
+    validateForm() {
+      return !this.errors.any()
+    },
+    defaultAvatar() {
+      return 'this.src="' + require('../../../../../assets/images/portrait/avatar.jpg') + '"';
+    }
+  },
+  methods: {
+    updateAvatar: function () {
+      let file = this.$refs.update_avatar_input.files[0];
+      let formData = new FormData();
+      formData.set('file',file);
+      postRequest("/user/avatar",formData).then((res)=>{
+        debugger
+      })
+    },
+
+    save_changes() {
+      /* eslint-disable */
+      if (!this.validateForm) return
+
+      this.$vs.loading();
+      delete this.data_local.userFeature;
+      this.data_local.birthday = moment(this.data_local.birthday).format('YYYY-MM-DD');
+      let that = this;
+      postRequest('/system/sysUser', this.data_local).then((res) => {
+        if (res.success) {
+          notify.success('保存操作完成！');
+          that.$store.dispatch('auth/refresh');
+        }
+      });
+    },
+    reset_data() {
+      this.data_local = JSON.parse(JSON.stringify(this.data))
+    }
+  }
+}
 </script>

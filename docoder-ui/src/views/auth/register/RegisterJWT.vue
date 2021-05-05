@@ -24,7 +24,7 @@ Author URL: http://www.themeforest.net/user/pixinvent
       label-placeholder="用户名"
       name="userName"
       placeholder="用户名"
-      v-model="userName"
+      v-model="user.userName"
       @blur="isRepeat('userName','用户名',userName)"
       class="w-full mt-8"/>
     <span class="text-danger text-sm">{{ errors.first('userName') }}</span>
@@ -38,7 +38,7 @@ Author URL: http://www.themeforest.net/user/pixinvent
       label-placeholder="邮箱"
       @blur="isRepeat('email','邮箱',email)"
       placeholder="邮箱"
-      v-model="email"
+      v-model="user.email"
       class="w-full mt-6"/>
     <span class="text-danger text-sm">{{ errors.first('email') }}</span>
 
@@ -51,7 +51,7 @@ Author URL: http://www.themeforest.net/user/pixinvent
       name="userPwd"
       label-placeholder="密码"
       placeholder="密码"
-      v-model="userPwd"
+      v-model="user.userPwd"
       class="w-full mt-6"/>
     <span class="text-danger text-sm">{{ errors.first('userPwd') }}</span>
 
@@ -63,7 +63,7 @@ Author URL: http://www.themeforest.net/user/pixinvent
       name="confirm_password"
       label-placeholder="确认密码"
       placeholder="确认密码"
-      v-model="confirm_password"
+      v-model="user.confirm_password"
       class="w-full mt-6"/>
     <span class="text-danger text-sm">{{ errors.first('confirm_password') }}</span>
 
@@ -75,18 +75,19 @@ Author URL: http://www.themeforest.net/user/pixinvent
         name="captcha"
         label-placeholder="验证码"
         placeholder="验证码"
-        v-model="captcha"
+        v-model="user.captcha"
         class="w-50 mt-6"/>
 
       <vs-chip closable close-icon="refresh" class="w-50 mt-6" style="margin-left: 5%" @click="refreshCaptcha">
-        <img :src="captchaImg" class="w-full" style="border-radius:5px;height: 30px;"/>
+        <img :src="user.captchaImg" class="w-full" style="border-radius:5px;height: 30px;"/>
       </vs-chip>
     </vs-row>
     <vs-row class="text-danger text-sm">{{ errors.first('captcha') }}</vs-row>
 
     <!--<vs-checkbox v-model="isTermsConditionAccepted" class="mt-6">I accept the terms & conditions.</vs-checkbox>-->
     <vs-button type="border" to="/side/auth/login" class="mt-6">返回登录</vs-button>
-    <vs-button class="float-right mt-6" @click="registerUserJWT" :disabled="!validateForm" icon-pack="feather" icon="icon-user-check">注册
+    <vs-button class="float-right mt-6" @click="registerUserJWT" :disabled="!validateForm" icon-pack="feather"
+               icon="icon-user-check">注册
     </vs-button>
   </div>
 </template>
@@ -95,19 +96,22 @@ Author URL: http://www.themeforest.net/user/pixinvent
 
 import {getRequest, postRequest} from "../../../core/http/axiosClient";
 import notify from "../../../core/notify/notify";
-import stringUtils from "../../../core/utils/stringUtils";
+import stringUtil from "../../../core/utils/stringUtil";
+import objectUtil from "@/core/utils/objectUtil";
 
 export default {
   data() {
     return {
-      userName: '123456',
-      email: '709390364@qq.com',
-      userPwd: '123456',
-      confirm_password: '123456',
-      captcha: '',
-      captchaImg: String | ArrayBuffer,
+      user: {
+        userName: '123456',
+        email: '709390364@qq.com',
+        userPwd: '123456',
+        confirm_password: '123456',
+        captcha: '',
+        captchaImg: String | ArrayBuffer,
+        actionCode: '',
+      },
       hasField: false,
-      actionCode: '',
       error: ''
     }
   },
@@ -124,8 +128,8 @@ export default {
       let that = this;
       getRequest('/user/registerPrepare').then(function (res) {
         if (res.success) {
-          that.actionCode = res.data.randomCode;
-          that.captchaImg = res.data.captchaStr;
+          that.user.actionCode = res.data.randomCode;
+          that.user.captchaImg = res.data.captchaStr;
         }
       })
     },
@@ -133,15 +137,15 @@ export default {
       let that = this;
       getRequest('/user/refreshCaptcha/' + this.actionCode).then(function (res) {
         if (res.success) {
-          that.actionCode = res.data.randomCode;
-          that.captchaImg = res.data.captchaStr;
+          that.user.actionCode = res.data.randomCode;
+          that.user.captchaImg = res.data.captchaStr;
         }
       })
     },
     isRepeat(field, fieldName, fieldVal) {
       let that = this;
       fieldVal = fieldVal.trim();
-      if (stringUtils.isBlank(fieldVal)) {
+      if (stringUtil.isBlank(fieldVal)) {
         return;
       }
       this.hasField = true;
@@ -159,32 +163,31 @@ export default {
       // If form is not validated or user is already login return
       //if (!this.validateForm ) return
 
-      this.userPwd = this.$md5(this.userPwd);
-
-      if (!this.actionCode) {
+      if (!this.user.actionCode) {
         this.error = '当前页面出错,正在跳转...';
         this.router.push('/side/auth/register');
       }
 
       const userDetails = {
-        userName: this.userName,
-        userPwd: this.userPwd,
-        email: this.email,
-        actionCode: this.actionCode,
-        captcha: this.captcha
+        userName: this.user.userName,
+        userPwd: this.$md5(this.user.userPwd),
+        email: this.user.email,
+        actionCode: this.user.actionCode,
+        captcha: this.user.captcha
       }
 
       let that = this;
       postRequest('/user/register', userDetails).then(function (res) {
         if (res.success) {
           notify.success('注册成功，请登录！');
+          objectUtil.reset(that.user);
           that.$router.push('/side/auth/login');
           //that.$router.push('/side/auth/email_confirm/' + that.userName)
         } else {
           that.registerPrepare();
-          if(res.isHandle){
+          if (res.isHandle) {
             let data = JSON.parse(res.message);
-            for(let field in data){
+            for (let field in data) {
               that.$validator.errors.add({'field': field, 'msg': data[field]});
             }
           }

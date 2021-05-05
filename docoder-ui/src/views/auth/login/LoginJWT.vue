@@ -1,7 +1,7 @@
 <template>
   <div>
     <vs-alert icon="warning" active="true" color="warning" class="my-5" v-if="error">
-      <strong>{{error}}</strong>
+      <strong>{{ error }}</strong>
     </vs-alert>
     <vs-input
       v-validate="'required|min:6'"
@@ -11,7 +11,7 @@
       icon="icon icon-user"
       icon-pack="feather"
       label-placeholder="用户名/邮箱"
-      v-model="userName"
+      v-model="user.userName"
       class="w-full"/>
     <span class="text-danger text-sm">{{ errors.first('userName') }}</span>
 
@@ -24,12 +24,12 @@
       icon="icon icon-lock"
       icon-pack="feather"
       label-placeholder="密码"
-      v-model="userPwd"
+      v-model="user.userPwd"
       class="w-full mt-6"/>
     <span class="text-danger text-sm">{{ errors.first('userPwd') }}</span>
 
     <div class="flex flex-wrap justify-between my-5">
-      <vs-checkbox v-model="checkbox_remember_me" class="mb-3">7天免登录</vs-checkbox>
+      <vs-checkbox v-model="user.checkbox_remember_me" class="mb-3">7天免登录</vs-checkbox>
       <router-link to="/side/auth/forgot_password">忘记密码？</router-link>
     </div>
     <div class="flex flex-wrap justify-between mb-3">
@@ -88,63 +88,68 @@
 
 <script>
 
-    export default {
-        data() {
-            return {
-                userName: 'admini',
-                userPwd: '123456',
-                checkbox_remember_me: false,
-                error: ''
-            }
-        },
-        computed: {
-            validateForm() {
-                return !this.errors.any() && this.email !== '' && this.password !== ''
-            }
-        },
-        methods: {
-            checkLogin() {
-                // If user is already logged in notify
-                return false
-            },
-            loginJWT() {
+import objectUtil from "@/core/utils/objectUtil";
 
-                //if (!this.checkLogin()) return
-
-                // Loading
-                this.$vs.loading()
-
-                let originalPwd = this.userPwd;
-                const payload = {
-                    url:'/user/login',
-                    userDetails : {
-                        userName: this.userName,
-                        userPwd: this.$md5(this.userPwd),
-                        rememberMe: this.checkbox_remember_me,
-                    }
-                }
-
-                let that = this;
-                this.$store.dispatch('auth/loginJWT', payload).then(function (res) {
-                    that.$vs.loading.close()
-                    that.userPwd = originalPwd;
-                    if (res.success) {
-                        that.$router.push('/app')
-                    } else {
-                        if(res.isHandle){
-                          let data = JSON.parse(res.message);
-                          for(let field in data){
-                            that.$validator.errors.add({'field': field, 'msg': data[field]});
-                          }
-                        }
-                    }
-                })
-            },
-            registerUser() {
-                this.$router.push('/side/auth/register');
-            }
-        }
+export default {
+  data() {
+    return {
+      user: {
+        userName: '123456',
+        userPwd: '123456',
+        checkbox_remember_me: false,
+      },
+      error: ''
     }
+  },
+  computed: {
+    validateForm() {
+      return !this.errors.any() && this.email !== '' && this.password !== ''
+    }
+  },
+  methods: {
+    checkLogin() {
+      // If user is already logged in notify
+      return false
+    },
+    loginJWT() {
+
+      //if (!this.checkLogin()) return
+
+      // Loading
+      this.$vs.loading()
+
+      let originalPwd = this.userPwd;
+      const payload = {
+        url: '/user/login',
+        userDetails: {
+          userName: this.user.userName,
+          userPwd: this.$md5(this.user.userPwd),
+          rememberMe: this.user.checkbox_remember_me,
+        }
+      }
+
+      let that = this;
+      this.$store.dispatch('auth/loginJWT', payload).then(function (res) {
+        that.$vs.loading.close()
+        that.userPwd = originalPwd;
+        if (res.success) {
+          objectUtil.reset(that.user);
+          that.$router.push('/app')
+        } else {
+          if (res.isHandle) {
+            let data = JSON.parse(res.message);
+            for (let field in data) {
+              that.$validator.errors.add({'field': field, 'msg': data[field]});
+            }
+          }
+        }
+      })
+    },
+    registerUser() {
+      this.$router.push('/side/auth/register');
+    }
+  }
+}
 
 </script>
 

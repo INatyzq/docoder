@@ -6,10 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +20,11 @@ import java.util.List;
 public class AuthenticationProvider {
 
     @Autowired
-    private List<IAuthentication> providerList = new ArrayList<>();
+    private final List<IAuthentication> providerList = new ArrayList<>();
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    private AbstractUserContextHolder userContextHolder;
 
     /**
      * 认证
@@ -40,6 +40,7 @@ public class AuthenticationProvider {
             if(authentication.allowAccess(request) && !requireAuth){
                 authentication.accessIntercept(request,response,redisUtil);
                 isAuth = true;
+                authentication.setUserDetail(request, redisUtil, userContextHolder.userDetailJsonStrLocal);
             }else{
                 if(requireAuth){
                     String dispatcherAuthenticationUrl = authentication.dispatcherAuthenticationUrl();

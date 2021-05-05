@@ -9,7 +9,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import userService from "@/service/userService";
-import stringUtils from "@/core/utils/stringUtils";
+import stringUtil from "@/core/utils/stringUtil";
 
 const originalPush = Router.prototype.push
 Router.prototype.push = function push(location) {
@@ -188,7 +188,7 @@ router.afterEach(() => {
 
 router.beforeEach((to, from, next) => {
 
-  const isUserLoggedIn = stringUtils.isNotBlank(userService.getUserDetail().token);
+  const isUserLoggedIn = stringUtil.isNotBlank(userService.getUserDetail().token);
   if (
     !to.path.startsWith("/side/auth") &&
     to.path !== "/side/auth/login" &&
