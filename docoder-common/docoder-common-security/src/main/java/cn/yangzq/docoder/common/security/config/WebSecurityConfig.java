@@ -1,7 +1,9 @@
 package cn.yangzq.docoder.common.security.config;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.yangzq.docoder.common.security.filter.TokenAuthenticationFilter;
 import cn.yangzq.docoder.common.security.handler.AuthenticationProvider;
+import cn.yangzq.docoder.common.security.handler.IAuthentication;
 import cn.yangzq.docoder.common.security.security.UnauthorizedEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +18,10 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 /**
 *@author yangzq
@@ -63,9 +67,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/api/**","/**/doc.html",
-                "/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**"
-               );
+        List<String> ignoringList = new ArrayList<>();
+        ignoringList.add("/api/**");
+        ignoringList.add("/**/doc.html");
+        ignoringList.add("/swagger-resources/**");
+        ignoringList.add("/webjars/**");
+        ignoringList.add("/v2/**");
+        ignoringList.add("/swagger-ui.html/**");
+
+        List<IAuthentication> providerList = authenticationProvider.getProviderList();
+        providerList.forEach(provider->ignoringList.addAll(CollectionUtil.defaultIfEmpty(provider.webIgnoring(),new ArrayList<>())));
+
+        String[] ignorings = {};
+        ignorings = ignoringList.toArray(ignorings);
+        web.ignoring().antMatchers(ignorings);
     }
 
     /**

@@ -61,4 +61,8 @@ public class AuthenticationProvider {
         }
         return isDispatcher;
     }
+
+    public List<IAuthentication> getProviderList() {
+        return providerList;
+    }
 }

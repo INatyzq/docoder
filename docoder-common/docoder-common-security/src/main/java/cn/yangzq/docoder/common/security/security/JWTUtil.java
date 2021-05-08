@@ -77,23 +77,16 @@ public class JWTUtil {
      */
     public static String sign(String userId, String userName,Long expireSecond) {
         Algorithm algorithm = Algorithm.HMAC256(userId + SECRET_KEY);
-        // 附带user信息
-        JWTCreator.Builder builder = JWT.create()
-                .withClaim(USER_ID, userId)
-                .withClaim(USER_NAME, userName);
-        if(expireSecond!=null){
-            Date expireDate = new Date(System.currentTimeMillis() + expireSecond*1000);
-            builder.withExpiresAt(expireDate);
+        if (expireSecond == null) {
+            expireSecond = 24 * 60 * 60L;
         }
-        return builder.sign(algorithm);
+        Date expireDate = new Date(System.currentTimeMillis() + expireSecond * 1000);
+        // 附带user信息
+        return JWT.create()
+                .withClaim(USER_ID, userId)
+                .withClaim(USER_NAME, userName)
+                .withExpiresAt(expireDate)
+                .sign(algorithm);
 
     }
-
-    public static void main(String[] args) {
-        String sign1 = JWTUtil.sign("123", "456",1000L);
-        String sign2 = JWTUtil.sign("123", "456",1000L);
-        System.out.println(sign1);
-        System.out.println(sign2);
-    }
-
 }

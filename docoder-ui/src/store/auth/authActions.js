@@ -7,8 +7,9 @@
   Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 
-import {postRequest} from "../../core/http/axiosClient";
+import {getRequest, postRequest} from "../../core/http/axiosClient";
 import notify from "../../core/notify/notify";
+import userService from "@/service/userService";
 
 export default {
 
@@ -32,16 +33,15 @@ export default {
   },
 
   refresh({commit}){
-    let userInfo = sessionStorage.getItem('userInfo');
-    if(!userInfo){
+    let userDetail = userService.getUserDetail();
+    if(!userDetail){
       notify.warning('刷新失败：用户信息获取失败！');
       return false;
     }
-    userInfo = JSON.parse(userInfo);
-    postRequest('/system/sysUser/refresh',{'token':userInfo.token}).then(res=>{
+    getRequest('/user/refresh/'+userDetail.id).then(res=>{
       if(res.success){
-        let userInfo = res.data;
-        commit('auth/UPDATE_USER_INFO', userInfo, {root: true})
+        let userDetail = res.data;
+        commit('auth/UPDATE_USER_INFO', userDetail, {root: true})
       }else{
         notify.danger('用户信息刷新失败：请联系管理员！');
       }

@@ -24,12 +24,12 @@
               <user-edit-tab-account class="mt-4" :data="user_data"/>
             </div>
           </vs-tab>
-          <!--<vs-tab label="社交个性" icon-pack="feather" icon="icon-user">
+          <vs-tab label="社交个性" icon-pack="feather" icon="icon-user">
             <div class="tab-text">
               <user-edit-tab-feature class="mt-4" :data="user_data"/>
             </div>
           </vs-tab>
-          <vs-tab v-has-permission id="role" label="角色配置" icon-pack="feather" icon="icon-user">
+          <!--<vs-tab v-has-permission id="role" label="角色配置" icon-pack="feather" icon="icon-user">
             <div class="tab-text">
               <user-edit-tab-role class="mt-4" :data="user_data"/>
             </div>
@@ -56,8 +56,8 @@
 
     export default {
         components: {
-            /*UserEditTabRole,
-            UserEditTabFeature,*/
+            /*UserEditTabRole,*/
+            UserEditTabFeature,
             UserEditTabAccount,
             /*UserEditTabPasswordReset*/
         },

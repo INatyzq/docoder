@@ -12,18 +12,20 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.NoHandlerFoundException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import cn.yangzq.docoder.common.core.utils.ResultVo;
 
 /**
-*@author yangzq
-*@description 全局异常处理类
-**/
+ * @author yangzq
+ * @description 全局异常处理类
+ **/
 @Slf4j
 @RestController
 @RestControllerAdvice
@@ -80,10 +82,10 @@ public class GlobalExceptionHandler {
      * 500异常处理
      */
     @ExceptionHandler(value = Exception.class)
-    public ResultVo errorHandler (HttpServletRequest request, Exception exception, HttpServletResponse response) {
+    public ResultVo errorHandler(HttpServletRequest request, Exception exception, HttpServletResponse response) {
         printStackTrace(exception);
         int code = HttpStatus.UNSUPPORTED_MEDIA_TYPE.value();
-        if(exception instanceof AuthException){
+        if (exception instanceof AuthException) {
             code = ((AuthException) exception).getCode();
         }
         return commonHandler(request, response,
@@ -96,7 +98,7 @@ public class GlobalExceptionHandler {
      * 业务异常处理
      */
     @ExceptionHandler(value = BasicException.class)
-    private ResultVo errorHandler (HttpServletRequest request, BasicException exception, HttpServletResponse response) {
+    private ResultVo errorHandler(HttpServletRequest request, BasicException exception, HttpServletResponse response) {
         printStackTrace(exception);
         ResultVo errorEntity = ResultVo.failed()
                 .message(exception.getMessage())
@@ -113,8 +115,8 @@ public class GlobalExceptionHandler {
     public ResultVo validExceptionHandler(BindException exception, HttpServletRequest request, HttpServletResponse response) {
         printStackTrace(exception);
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
-        Map<String,String> errors = new HashMap<>();
-        for (FieldError error:fieldErrors) {
+        Map<String, String> errors = new HashMap<>();
+        for (FieldError error : fieldErrors) {
             errors.put(error.getField(), error.getDefaultMessage());
         }
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -128,8 +130,8 @@ public class GlobalExceptionHandler {
     public ResultVo methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException exception, HttpServletRequest request, HttpServletResponse response) {
         printStackTrace(exception);
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
-        Map<String,String> errors = new HashMap<>();
-        for (FieldError error:fieldErrors) {
+        Map<String, String> errors = new HashMap<>();
+        for (FieldError error : fieldErrors) {
             errors.put(error.getField(), error.getDefaultMessage());
         }
         ResultVo<Object> result = ResultVo.failed().message(JSONUtil.toJsonStr(errors)).isHandle(true);
@@ -140,7 +142,7 @@ public class GlobalExceptionHandler {
      * 统一异常消息处理
      */
     private ResultVo commonHandler(HttpServletRequest request, HttpServletResponse response,
-                                        String error, int httpCode, String message) {
+                                   String error, int httpCode, String message) {
         ResultVo errorEntity = ResultVo.failed()
                 .message(message)
                 .code(httpCode);
@@ -165,16 +167,16 @@ public class GlobalExceptionHandler {
     /**
      * 记录异常信息
      */
-    private void printStackTrace(Exception e){
-       /* String traceInfo = getStackTraceInfo(e);
-        System.out.println(traceInfo);*/
-        log.error(this.getClass().getSimpleName(),e.getMessage());
+    private void printStackTrace(Exception e) {
+        String traceInfo = getStackTraceInfo(e);
+        System.out.println(traceInfo);
+        //log.error(this.getClass().getSimpleName(),e.getMessage());
     }
 
     /**
      * 从堆栈中获取异常信息
      */
-    private String getStackTraceInfo(Exception e){
+    private String getStackTraceInfo(Exception e) {
         StringWriter sw = null;
         PrintWriter pw = null;
         try {

@@ -31,7 +31,8 @@ const dictionary = {
       alpha_dash: (field) => field+'格式不正确（只能包含字母、数字及下划线）',
       min: (field,val) => field+'的最小长度是'+val,
       max: (field,val) => field+'的最大长度是'+val,
-      confirmed: () =>'两次密码输入不一致'
+      confirmed: () =>'两次密码输入不一致',
+      phone: () =>'无效的手机号',
     },
     attributes: {
       account:'用户名/邮箱',
@@ -40,9 +41,10 @@ const dictionary = {
       password: '密码',
       userPwd: '密码',
       confirm_password: '确认密码',
+      idCard: '身份证号码',
       captcha: '验证码',
       task_name: '任务名称',
-      phone: '手机',
+      phone: '手机号码',
       task_type: '任务类型',
       task_template: '任务模板',
       task_tine_type: '时间类型',
@@ -63,10 +65,16 @@ const dictionary = {
 Validator.localize(dictionary,zh)
 
 Validator.extend('phone', {
-  messages: {
-    zh_CN: field => field + '必须是11位手机号码'
-  },
+  getMessage: (field => field + '无效'),
   validate: value => {
     return value.length === 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(value)
+  }
+})
+
+Validator.extend('idCard', {
+  getMessage: (field => field + '无效'),
+  validate: value => {
+    return /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/.test(value)
+      ||/^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$/.test(value)
   }
 })

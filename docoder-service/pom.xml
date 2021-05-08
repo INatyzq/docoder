@@ -15,9 +15,8 @@
     <description>service聚合父模块</description>
 
     <modules>
-        <module>docoder-api</module>
-        <module>docoder-service-base</module>
-        <module>docoder-service-user</module>
+        <module>docoder-base</module>
+        <module>docoder-user</module>
     </modules>
 
     <dependencies>

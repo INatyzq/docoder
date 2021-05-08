@@ -4,6 +4,7 @@ import cn.yangzq.docoder.common.core.utils.RedisUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
 *@author yangzq
@@ -49,4 +50,9 @@ public abstract class IAuthentication {
      */
     public abstract void setUserDetail(HttpServletRequest request,RedisUtil redisUtil,ThreadLocal<String> userDetailJsonStrLocal);
 
+    /**
+     * 返回不需要认证的路径数组
+     * @return
+     */
+    public abstract List<String> webIgnoring();
 }
