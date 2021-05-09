@@ -35,7 +35,6 @@ import java.util.concurrent.TimeUnit;
 *@description 系统用户表 服务实现类
 **/
 @Transactional
-@DubboService
 @Component
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements SysUserService {
 

@@ -8,6 +8,7 @@ import cn.hutool.core.util.RandomUtil;
 import cn.yangzq.docoder.base.api.ISysAttachmentService;
 import cn.yangzq.docoder.base.entity.po.SysAttachment;
 import cn.yangzq.docoder.user.entity.SysUser;
+import cn.yangzq.docoder.user.form.AvatarForm;
 import cn.yangzq.docoder.user.service.SysUserService;
 import cn.yangzq.docoder.common.core.utils.ResultVo;
 import cn.yangzq.docoder.common.mybatis.utils.Pageable;
@@ -69,23 +70,24 @@ public class SysUserController {
 
     @ApiOperation("更新用户头像")
     @PostMapping("/avatar")
-    public ResultVo<Object> updateAvatar(@RequestBody MultipartFile file) throws IOException {
-        Integer userId = userContextHolder.getCurrentUser().getId();
+    public ResultVo<Object> updateAvatar(AvatarForm avatarForm) throws IOException {
+        MultipartFile file = avatarForm.getFile();
+        Integer userId = avatarForm.getUserId();
+        String oldFileName = avatarForm.getOldFileName();
+
         String avatarUrl = String.format(FilePath.User.AVATAR_URL,userId);
 
         String originalFilename = file.getOriginalFilename();
         String fileType = "."+originalFilename.split("[.]")[1];
-        String filename = "id_"+userId+fileType;
-        avatarUrl = avatarUrl + File.separator+filename;
-        //SysAttachment attachment = buildAttachment(file, docoderConfig.getDataDir()+avatarUrl, userId);
-        //attachmentService.save(attachment);
+        String filename = "user"+userId+"_"+RandomUtil.randomString(6)+fileType;
+        String savePath = avatarUrl+File.separator+filename;
         SysUser user = new SysUser();
         user.setId(userId);
-        user.setAvatarUrl(avatarUrl);
+        user.setAvatarUrl(savePath);
         userService.updateById(user);
-        FileUtil.del(docoderConfig.getDataDir()+avatarUrl);
-        FileUtil.writeBytes(file.getBytes(),docoderConfig.getDataDir()+avatarUrl);
-        return ResultVo.success();
+        FileUtil.del(docoderConfig.getDataDir()+avatarUrl+File.separator+oldFileName);
+        FileUtil.writeBytes(file.getBytes(),docoderConfig.getDataDir()+savePath);
+        return ResultVo.success(user.getAvatarUrl());
     }
 
     @ApiOperation("更新用户头像")

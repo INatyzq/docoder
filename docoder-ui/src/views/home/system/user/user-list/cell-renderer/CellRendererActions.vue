@@ -11,13 +11,6 @@ export default {
   methods: {
     editRecord () {
       this.$router.push(`/app/home/system/user/user-edit/${this.params.data.id}`).catch(() => {})
-
-      /*
-              Below line will be for actual product
-              Currently it's commented due to demo purpose - Above url is for demo purpose
-
-              this.$router.push("/apps/user/user-edit/" + this.params.data.id).catch(() => {})
-            */
     },
     confirmDeleteRecord () {
       this.$vs.dialog({

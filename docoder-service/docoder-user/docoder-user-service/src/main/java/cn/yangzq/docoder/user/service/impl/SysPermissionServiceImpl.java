@@ -18,7 +18,6 @@ import java.util.List;
 *@description 系统权限表 服务实现类
 **/
 @Transactional
-@DubboService
 @Component
 public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, SysPermission> implements SysPermissionService {
 

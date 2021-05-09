@@ -126,6 +126,12 @@ export default {
           headerCheckboxSelection: true
         },
         {
+          headerName: '操作',
+          field: 'transactions',
+          width: 150,
+          cellRendererFramework: 'CellRendererActions'
+        },
+        {
           headerName: '用户名',
           field: 'userName',
           filter: true,
@@ -186,12 +192,6 @@ export default {
           field: 'status',
           width: 150,
           cellRendererFramework: 'CellRendererStatus'
-        },
-        {
-          headerName: '操作',
-          field: 'transactions',
-          width: 150,
-          cellRendererFramework: 'CellRendererActions'
         }
       ],
 
