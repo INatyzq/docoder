@@ -44,7 +44,7 @@ const router = new Router({
         {
           path: 'home/system/permission',
           name: 'home-system-permission',
-          component: () => import('@/views/home/system/PermissionManage.vue'),
+          component: () => import('@/views/home/system/permission/PermissionManage.vue'),
           meta: {
             breadcrumb: [
               {title: '主页'},
@@ -80,6 +80,19 @@ const router = new Router({
               {title: '用户列表', active: true}
             ],
             pageTitle: '用户列表'
+          }
+        },
+        {
+          path: 'home/system/permission-config',
+          name: 'home-system-user-permission-config',
+          component: () => import('@/views/home/system/permission/config/PermissionConfig'),
+          meta: {
+            breadcrumb: [
+              {title: '主页'},
+              {title: '系统设置'},
+              {title: '权限配置', active: true}
+            ],
+            pageTitle: '权限配置'
           }
         },
         {

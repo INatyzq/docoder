@@ -16,4 +16,28 @@
         WHERE t5.id = #{userId,jdbcType=INTEGER}
     </select>
 
+    <select id="selectRbac" resultType="string">
+        select
+            distinct concat(ifnull(su.id,'-1'),'_',ifnull(sr.id,'-1'),'_',ifnull(sp.id,'-1')) as idsStr
+        from sys_user su
+        left join user_role ur
+        on su.id = ur.user_id
+        left join sys_role sr
+        on ur.role_id = sr.id
+        left join role_permission rp
+        on sr.id = rp.role_id
+        left join sys_permission sp
+        on rp.permission_id = sp.id
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="mode=='user'">
+                and su.id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="mode=='role'">
+                and sr.id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="mode=='permission'">
+                and sp.id = #{id,jdbcType=INTEGER}
+            </if>
+        </trim>
+    </select>
 </mapper>

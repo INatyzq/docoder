@@ -66,10 +66,22 @@
 <script>
     import {VTree} from 'vue-tree-halower'
     import {VueSelect} from 'vue-select'
-    import {deleteRequest, getRequest, postRequest} from "../../../core/http/axiosClient";
-    import notify from "../../../core/notify/notify";
+    import {deleteRequest, getRequest, postRequest} from "../../../../core/http/axiosClient";
+    import notify from "../../../../core/notify/notify";
 
     export default {
+      components: {
+        VTree,
+          'v-select': VueSelect
+      },
+      computed: {
+        validateForm() {
+          return this.permissionData.permissionName !== '' && this.permissionData.resourceUrl !== '';
+        }
+      },
+      mounted() {
+        this.listAll();
+      },
         data() {
             return {
                 openPermissionDetail: false,
@@ -104,14 +116,6 @@
                 permissionList: [],
                 moveId: ''
             }
-        },
-        computed: {
-            validateForm() {
-                return this.permissionData.permissionName !== '' && this.permissionData.resourceUrl !== '';
-            }
-        },
-        mounted() {
-            this.listAll();
         },
         methods: {
             search() {
@@ -188,11 +192,10 @@
                 this.openPermissionDetail = false;
                 this.$vs.loading();
                 let that = this;
-                postRequest('/system/sysPermission', this.permissionData).then(function (res) {
+                postRequest('/user/permission/saveOrUpdate', this.permissionData).then(function (res) {
                     if (res.success) {
                         that.permissionData = that.initData;
-                        that.permissionList = res.data;
-                        that.renderTree();
+                        that.listAll();
                         notify.success('操作已完成！');
                     }
                 })
@@ -203,7 +206,7 @@
             doMove(node) {
                 this.$vs.loading();
                 let that = this;
-                postRequest('/system/sysPermission/move',{'id':this.moveId,'parentId':node.id}).then(function (res) {
+                postRequest('/user/permission/move',{'id':this.moveId,'parentId':node.id}).then(function (res) {
                     if (res.success) {
                         that.listAll();
                         that.moveId = '';
@@ -217,7 +220,7 @@
             deleteNode(node) {
                 this.$vs.loading();
                 let that = this;
-                deleteRequest('/system/sysPermission/' + node.id).then(function (res) {
+                deleteRequest('/user/permission/' + node.id).then(function (res) {
                     if (res.success) {
                         that.listAll();
                         notify.success('操作已完成！');
@@ -227,7 +230,7 @@
             listAll() {
                 this.$vs.loading();
                 let that = this;
-                getRequest('/system/sysPermission/listAll').then(function (res) {
+                getRequest('/user/permission/listAll').then(function (res) {
                     if (res.success) {
                         that.permissionList = res.data;
                         that.renderTree();
@@ -269,10 +272,6 @@
                 this.treeData[0].children = pIdChildren.get(0);
                 pIdChildren = null;
             }
-        },
-        components: {
-            VTree,
-            'v-select': VueSelect
         }
     }
 </script>

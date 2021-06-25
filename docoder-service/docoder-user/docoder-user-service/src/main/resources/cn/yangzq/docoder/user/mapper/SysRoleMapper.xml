@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yangzq.docoder.user.mapper.SysRoleMapper">
+    <select id="selectDataPage" resultType="cn.yangzq.docoder.user.vo.SysRoleVo">
+        select
+        id,role_name,role_desc,status
+        from sys_role
+        <trim prefix="where" prefixOverrides="and|or">
+            and status = 1
+            <if test="params.roleName!=null and params.roleName!=''">
+                and role_name like concat('%',#{params.roleName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="params.roleDesc!=null and params.roleDesc!=''">
+                and role_desc like concat('%',#{params.roleDesc,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="params.status!=null">
+                and status = #{params.status,jdbcType=INTEGER}
+            </if>
+        </trim>
+    </select>
+
+    <select id="selectRbacPage" resultType="cn.yangzq.docoder.user.vo.SysRoleVo">
+        select
+            sr.id,sr.role_name,sr.role_desc,sr.status,sr.created_by,
+            sr.created_time,sr.updated_by,sr.updated_time
+        from sys_role sr
+        left join (
+            select role_id,group_concat(user_id) userIds
+            from user_role
+            group by role_id
+        ) ur
+        on sr.id = ur.role_id
+        <if test="param.mode=='user'">
+            and instr(concat(',',ur.userIds,','),concat(',',#{param.id,jdbcType=INTEGER},','))
+        </if>
+        left join (
+            select role_id,group_concat(permission_id) permissionIds
+            from role_permission
+            group by role_id
+        ) rp
+        on sr.id = rp.role_id
+        <if test="param.mode=='permission'">
+            and instr(concat(',',rp.permissionIds,','),concat(',',#{param.id,jdbcType=INTEGER},','))
+        </if>
+        order by
+        <if test="param.mode=='user'">
+            ur.userIds desc,
+        </if>
+        <if test="param.mode=='permission'">
+            rp.permissionIds desc,
+        </if>
+        sr.created_time
+    </select>
+</mapper>

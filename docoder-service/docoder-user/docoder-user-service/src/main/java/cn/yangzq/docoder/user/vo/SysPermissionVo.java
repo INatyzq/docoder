@@ -1,17 +1,22 @@
 package cn.yangzq.docoder.user.vo;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
 /**
-*@author yangzq
-*@description 权限VO
-**/
+ * @author yangzq
+ * @description 系统权限VO
+ **/
 @Data
-public class PermissionVO implements Serializable {
-    private static final long serialVersionUID = -5059584533665477319L;
+@EqualsAndHashCode(callSuper = false)
+@ApiModel(value = "SysPermission对象", description = "系统权限VO")
+public class SysPermissionVo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "主键id")
     private Integer id;
@@ -35,5 +40,6 @@ public class PermissionVO implements Serializable {
     private String icon;
 
     @ApiModelProperty(value = "排序序号")
-    private Long orderNum;
+    private Integer orderNum;
+
 }

@@ -43,7 +43,7 @@
           </template>
         </vx-input-group>
 
-        <div v-if="userFeature.tags" class="demo-alignment">
+        <div v-if="userFeature.tags" class="demo-alignment" style="margin-top: -40px;margin-bottom: 20px;">
           <vs-chip @click="removeItem('tags',item)" closable color="#24c1a0" close-icon="close" :key="index" :value="item" v-for="(item,index) in userFeature.tags.split('、')">
             {{ item }}
           </vs-chip>
@@ -65,7 +65,7 @@
           </template>
         </vx-input-group>
 
-        <div v-if="userFeature.hobby" class="demo-alignment">
+        <div v-if="userFeature.hobby" class="demo-alignment" style="margin-top: -40px">
           <vs-chip @click="removeItem('hobby',item)" closable color="#24c1a0" close-icon="close" :key="index" :value="item" v-for="(item,index) in userFeature.hobby.split('、')">
             {{ item }}
           </vs-chip>

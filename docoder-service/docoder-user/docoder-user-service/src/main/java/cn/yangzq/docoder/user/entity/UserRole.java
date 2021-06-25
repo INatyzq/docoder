@@ -1,11 +1,9 @@
 package cn.yangzq.docoder.user.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 
 import java.util.Date;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 
 import java.io.Serializable;
@@ -17,12 +15,12 @@ import lombok.EqualsAndHashCode;
 
 /**
  * @author yangzq
- * @description 用户特性表
- */
+ * @description 用户角色关系表
+ **/
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "UserFeature对象", description = "用户特性表")
-public class UserFeature implements Serializable {
+@ApiModel(value = "UserRole对象", description = "用户角色关系表")
+public class UserRole implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,20 +31,22 @@ public class UserFeature implements Serializable {
     @ApiModelProperty(value = "用户id")
     private Integer userId;
 
-    @ApiModelProperty(value = "等级成长值")
-    private Integer levelVal;
+    @ApiModelProperty(value = "角色id")
+    private Integer roleId;
 
-    @ApiModelProperty(value = "标签")
-    private String tags;
+    @ApiModelProperty(value = "有效标识,0:无效,1:有效")
+    private Integer status;
 
-    @ApiModelProperty(value = "爱好")
-    private String hobby;
+    @ApiModelProperty(value = "创建者")
+    private Integer createdBy;
 
-    @ApiModelProperty(value = "个性签名")
-    private String signature;
+    @ApiModelProperty(value = "创建时间")
+    private Date createdTime;
+
+    @ApiModelProperty(value = "修改者")
+    private Integer updatedBy;
 
     @ApiModelProperty(value = "修改时间")
-    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updatedTime;
 
 

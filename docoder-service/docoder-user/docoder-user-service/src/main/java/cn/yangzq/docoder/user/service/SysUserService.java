@@ -3,6 +3,9 @@ package cn.yangzq.docoder.user.service;
 import cn.yangzq.docoder.user.entity.SysUser;
 import cn.yangzq.docoder.user.form.UserLoginForm;
 import cn.yangzq.docoder.user.form.UserRegisterForm;
+import cn.yangzq.docoder.user.param.RbacParam;
+import cn.yangzq.docoder.user.vo.SysPermissionVo;
+import cn.yangzq.docoder.user.vo.SysUserVo;
 import cn.yangzq.docoder.user.vo.UserDetailVO;
 import cn.yangzq.docoder.common.mybatis.utils.Pageable;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -41,4 +44,12 @@ public interface SysUserService extends IService<SysUser> {
      * @return
      */
     UserDetailVO refresh(Integer id);
+
+    /**
+     * 基于rbac的分页查询
+     * @param param
+     * @param page
+     * @return
+     */
+    Pageable<SysUserVo> getRbacPage(RbacParam param, Pageable<SysPermissionVo> page);
 }

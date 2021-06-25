@@ -8,204 +8,151 @@
 
 <template>
 
-  <div id="page-user-list">
-
+  <div>
     <vx-card ref="filterCard" title="查询" class="user-list-filters mb-8" collapse-action refresh-content-action
              @refresh="queryHelper.refresh(that,'getListPage')">
       <div class="vx-row">
-        <div class="vx-col md:w-1/5 sm:w-1/2 w-full">
           <vs-input v-model="queryHelper.userName" placeholder="用户名" label-placeholder="用户名"
-                    class="mb-2 md:mb-0"/>
-        </div>
+                    class="ml-2"/>
 
-        <div class="vx-col md:w-1/5 sm:w-1/2 w-full">
           <vs-input v-model="queryHelper.email" placeholder="邮箱" label-placeholder="邮箱"
-                    class="mb-2 md:mb-0"/>
-        </div>
+                    class="ml-2"/>
 
-        <div class="vx-col md:w-1/5 sm:w-1/2 w-full">
           <vs-input v-model="queryHelper.fullName" placeholder="姓名" label-placeholder="姓名"
-                    class="mb-2 md:mb-0"/>
-        </div>
+                    class="ml-2"/>
 
-        <div class="vx-col md:w-1/5 sm:w-1/2 w-full">
           <vs-input v-model="queryHelper.phone" placeholder="手机号" label-placeholder="手机号"
-                    class="mb-2 md:mb-0"/>
-        </div>
+                    class="ml-2"/>
 
-        <div class="vx-col md:w-1/5 sm:w-1/2 w-full">
           <vs-button icon-pack="feather" icon="icon-search"
-                     class="float-left px-4 mt-4" @click="getListPage">查询
+                     class="float-left mt-5 ml-2" @click="getListPage">查询
           </vs-button>
-        </div>
       </div>
     </vx-card>
 
-    <div class="vx-card p-6">
+    <vx-card>
+      <vs-table search :data="listPage.records" stripe>
+        <template slot="thead">
+          <vs-th>操作</vs-th>
+          <vs-th sort-key="userName">头像</vs-th>
+          <vs-th sort-key="userName">用户名</vs-th>
+          <vs-th sort-key="nickname">昵称</vs-th>
+          <vs-th sort-key="email">邮箱</vs-th>
+          <vs-th sort-key="fullName">姓名</vs-th>
+          <vs-th sort-key="sex">性别</vs-th>
+          <vs-th sort-key="birthday">生日</vs-th>
+          <vs-th sort-key="phone">手机</vs-th>
+          <vs-th sort-key="status">状态</vs-th>
+        </template>
 
-      <!-- AgGrid Table -->
-      <ag-grid-vue
-        ref="agGridTable"
-        :components="components"
-        :gridOptions="gridOptions"
-        class="ag-theme-material w-100 my-4 ag-grid-table"
-        :columnDefs="columnDefs"
-        :defaultColDef="defaultColDef"
-        :rowData="listPage.records"
-        rowSelection="multiple"
-        colResizeDefault="shift"
-        :animateRows="true"
-        :floatingFilter="false"
-        :pagination="true"
-        :paginationPageSize="queryHelper.size"
-        :suppressPaginationPanel="true"
-        :enableRtl="$vs.rtl">
-      </ag-grid-vue>
+        <template slot-scope="{data}">
+          <vs-tr :key="indextr" v-for="(tr, indextr) in data">
 
-      <vs-pagination
-        :total="this.listPage.pages||0"
-        :max="this.listPage.pages||0"
-        v-model="queryHelper.current"
-        :prev-icon="$vs.rtl ? 'arrow_forward' : 'arrow_back'"
-        :next-icon="$vs.rtl ? 'arrow_back' : 'arrow_forward'"/>
+            <vs-td :data="data[indextr].userName">
+              <div :style="{'direction': $vs.rtl ? 'rtl' : 'ltr'}">
+                <feather-icon icon="Edit3Icon" svgClasses="h-5 w-5 mr-4 hover:text-primary cursor-pointer"
+                              @click="editRecord(data[indextr])"/>
+                <feather-icon icon="Trash2Icon" svgClasses="h-5 w-5 hover:text-danger cursor-pointer"/>
+              </div>
+            </vs-td>
 
-    </div>
+            <vs-td :data="data[indextr].avatarUrl">
+              <vs-avatar :src="data[indextr].avatarUrl?FILE_SERVER+data[indextr].avatarUrl:defaultAvatar"
+                         :onerror="defaultAvatar" class="flex-shrink-0 mr-2" size="30px" @click="$router.push(url)"/>
+            </vs-td>
+
+            <vs-td :data="data[indextr].userName">
+              {{ data[indextr].userName }}
+            </vs-td>
+
+            <vs-td :data="data[indextr].nickname">
+              {{ data[indextr].nickname }}
+            </vs-td>
+
+            <vs-td :data="data[indextr].email">
+              {{ data[indextr].email }}
+            </vs-td>
+
+            <vs-td :data="data[indextr].fullName">
+              {{ data[indextr].fullName }}
+            </vs-td>
+
+            <vs-td :data="data[indextr].sex">
+              {{ data[indextr].sex }}
+            </vs-td>
+
+            <vs-td :data="data[indextr].birthday">
+              {{ data[indextr].birthday }}
+            </vs-td>
+
+            <vs-td :data="data[indextr].phone">
+              {{ data[indextr].phone }}
+            </vs-td>
+
+            <vs-td :data="data[indextr].status">
+              <vs-chip class="ag-grid-cell-chip" :color="chipColor(data[indextr].status)">
+                <span>{{ data[indextr].status == 0 ? '未激活' : data[indextr].status == 1 ? '已激活' : '注销' }}</span>
+              </vs-chip>
+            </vs-td>
+          </vs-tr>
+        </template>
+      </vs-table>
+
+      <vx-card>
+        <vs-pagination goto
+                       :total="this.listPage.pages||0"
+                       :max="this.listPage.pages||0"
+                       v-model="queryHelper.current"
+                       :prev-icon="$vs.rtl ? 'arrow_forward' : 'arrow_back'"
+                       :next-icon="$vs.rtl ? 'arrow_back' : 'arrow_forward'"/>
+      </vx-card>
+    </vx-card>
   </div>
 
 </template>
 
 <script>
-import {AgGridVue} from 'ag-grid-vue'
-import '@/assets/scss/vuexy/extraComponents/agGridStyleOverride.scss'
 import vSelect from 'vue-select'
-
-// Cell Renderer
-import CellRendererLink from './cell-renderer/CellRendererLink.vue'
-import CellRendererSex from './cell-renderer/CellRendererSex.vue'
-import CellRendererStatus from './cell-renderer/CellRendererStatus.vue'
-import CellRendererVerified from './cell-renderer/CellRendererVerified.vue'
-import CellRendererActions from './cell-renderer/CellRendererActions.vue'
-import {getRequest} from "../../../../../core/http/axiosClient";
+import {getRequest} from "@/core/http/axiosClient";
 import queryHelper from "../../../../../core/utils/queryHelper";
+import {FILE_SERVER} from "@/core/utils/appConts";
 
 
 export default {
   components: {
-    AgGridVue,
-    vSelect,
-
-    // Cell Renderer
-    CellRendererLink,
-    CellRendererSex,
-    CellRendererStatus,
-    CellRendererVerified,
-    CellRendererActions
+    vSelect
   },
-  data() {
-    return {
-      that: this,
-      queryHelper: queryHelper,
-      listPage: {},
-
-      // AgGrid
-      gridApi: null,
-      gridOptions: {},
-      defaultColDef: {
-        sortable: true,
-        resizable: true,
-        suppressMenu: true
-      },
-      columnDefs: [
-        {
-          headerName: 'ID',
-          field: 'id',
-          width: 125,
-          filter: true,
-          checkboxSelection: true,
-          headerCheckboxSelectionFilteredOnly: true,
-          headerCheckboxSelection: true
-        },
-        {
-          headerName: '操作',
-          field: 'transactions',
-          width: 150,
-          cellRendererFramework: 'CellRendererActions'
-        },
-        {
-          headerName: '用户名',
-          field: 'userName',
-          filter: true,
-          width: 210,
-          cellRendererFramework: 'CellRendererLink'
-        },
-        {
-          headerName: '昵称',
-          field: 'nickname',
-          filter: true,
-          width: 150
-        },
-        {
-          headerName: '邮箱',
-          field: 'email',
-          filter: true,
-          width: 225
-        },
-        {
-          headerName: '姓名',
-          field: 'fullName',
-          filter: true,
-          width: 200
-        },
-        {
-          headerName: '性别',
-          field: 'sex',
-          filter: true,
-          width: 150,
-          cellRendererFramework: 'CellRendererSex'
-        },
-        /*{
-            headerName: '身份证',
-            field: 'idCard',
-            filter: true,
-            width: 150
-        },*/
-        {
-          headerName: '生日',
-          field: 'birthday',
-          filter: true,
-          width: 150
-        },
-        {
-          headerName: '手机',
-          field: 'phone',
-          filter: true,
-          width: 200
-        },
-        /*{
-            headerName: '地址',
-            field: 'address',
-            filter: true,
-            width: 150
-        },*/
-        {
-          headerName: '状态',
-          field: 'status',
-          width: 150,
-          cellRendererFramework: 'CellRendererStatus'
-        }
-      ],
-
-      // Cell Renderer Components
-      components: {
-        CellRendererLink,
-        CellRendererSex,
-        CellRendererStatus,
-        CellRendererVerified,
-        CellRendererActions
+  mounted() {
+    this.getListPage();
+  },
+  computed: {
+    url() {
+      return '/apps/user/user-view/268'
+    },
+    defaultAvatar() {
+      return require('../../../../../assets/images/portrait/avatar.jpg');
+    },
+    chipColor() {
+      return (value) => {
+        if (value === 1) return 'success'
+        else if (value === 3) return 'danger'
+        else if (value === 2) return 'warning'
+        else return 'primary'
       }
     }
   },
+  data() {
+    return {
+      FILE_SERVER:FILE_SERVER,
+      queryHelper: queryHelper,
+      listPage: {records: []},
+    }
+  },
   methods: {
+    editRecord(rowData) {
+      this.$router.push(`/app/home/system/user/user-edit/${rowData.id}`).catch(() => {
+      })
+    },
     getListPage() {
       this.$vs.loading();
       let that = this;
@@ -214,20 +161,6 @@ export default {
           that.listPage = res.data;
         }
       })
-    }
-  },
-  mounted() {
-    this.getListPage();
-    this.gridApi = this.gridOptions.api
-
-    /* =================================================================
-      NOTE:
-      Header is not aligned properly in RTL version of agGrid table.
-      However, we given fix to this issue. If you want more robust solution please contact them at gitHub
-    ================================================================= */
-    if (this.$vs.rtl) {
-      const header = this.$refs.agGridTable.$el.querySelector('.ag-header-container')
-      header.style.left = `-${String(Number(header.style.transform.slice(11, -3)) + 9)}px`
     }
   }
 }

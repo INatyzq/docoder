@@ -1,5 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.yangzq.docoder.user.mapper.SysUserMapper">
+    <select id="selectDataPage" resultType="cn.yangzq.docoder.user.vo.SysUserVo">
+    </select>
 
+    <select id="selectRbacPage" resultType="cn.yangzq.docoder.user.vo.SysUserVo">
+        select
+            su.id,su.user_name,su.user_pwd,su.nickname,
+            su.full_name,su.phone,su.email,su.address,
+            su.sex,su.birthday,su.id_card,su.avatar_url,
+            su.status,su.created_by,su.created_time,
+            su.updated_by,su.updated_time
+        from sys_user su
+        left join (
+            select user_id,group_concat(role_id) roleIds
+            from user_role
+            group by  user_id
+        ) ur
+        on su.id = ur.user_id
+        <if test="param.mode=='role'">
+            and instr(concat(',',ur.roleIds,','),concat(',',#{param.id,jdbcType=INTEGER},','))
+        </if>
+        left join (
+            select ur.user_id,group_concat(permission_id) permissionIds
+            from user_role ur
+            inner join role_permission rp
+            on ur.role_id = rp.role_id
+            group by ur.user_id
+        ) rp
+        on su.id = rp.user_id
+        <if test="param.mode=='permission'">
+            and instr(concat(',',rp.permissionIds,','),concat(',',#{param.id,jdbcType=INTEGER},','))
+        </if>
+        order by
+        <if test="param.mode=='role'">
+            ur.roleIds desc,
+        </if>
+        <if test="param.mode=='permission'">
+            rp.permissionIds desc,
+        </if>
+        su.created_time
+    </select>
 </mapper>
