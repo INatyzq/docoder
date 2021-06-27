@@ -3,16 +3,33 @@
     <vs-row>
       <!--用户列表-->
       <vs-col vs-w="3.5">
-        <vs-table :multiple="clickMode===2&&nodeMode==='role'" :data="userPage.records">
+        <vs-table :data="[1]" class="text-center">
           <template slot="thead">
+            <vs-th>用户配置</vs-th>
+          </template>
+          <vs-tr>
+            <vs-td v-if="clickMode===30">
+              <button class="btn-delete text-success border-none cursor-pointer px-2 py-1 mr-2 rounded"
+                @click="moreConfig('user')">
+                <vs-icon icon-pack="feather" icon="icon-settings">&nbsp;确定</vs-icon>
+              </button>
+            </vs-td>
+          </vs-tr>
+        </vs-table>
+        <vs-table :data="userPage.records">
+          <template slot="thead">
+            <vs-th v-if="clickMode===30">选择</vs-th>
             <vs-th>用户列表</vs-th>
             <vs-th>操作项</vs-th>
           </template>
           <template slot-scope="{data}">
-            <vs-tr :key="indextr" v-for="(tr, indextr) in data"
-                   :state="nodeMode==='user'&&indextr===clickIndex?'primary':nodeMode!=='user'&&rbacUsers.includes(''+data[indextr].id)?'success':''">
-              <vs-td :data="data[indextr].userName">
-                <vs-list-item :title="data[indextr].userName" :subtitle="data[indextr].nickname">
+            <vs-tr :data="row" :key="indextr" v-for="(row, indextr) in data"
+                   :state="nodeMode==='user'&&indextr===clickIndex?'primary':nodeMode!=='user'&&rbacUsers.includes(''+row.id)?'success':''">
+              <vs-td v-if="clickMode===30">
+                <vs-checkbox :checked="row.checked" @change="nodeCheck('user',row)"/>
+              </vs-td>
+              <vs-td :data="row.userName">
+                <vs-list-item :title="row.userName" :subtitle="row.nickname">
                   <template slot="avatar">
                     <vs-avatar/>
                   </template>
@@ -21,25 +38,25 @@
               <vs-td>
                 <div class="vx-row">
                   <button class="btn-delete text-success border-none cursor-pointer px-2 py-1 mr-2 rounded"
-                          @click="modeClick(1,'user',data[indextr].id,indextr)">
+                          @click="modeClick(1,'user',row.id,indextr)">
                     <vs-icon icon-pack="feather" icon="icon-settings">&nbsp;单配</vs-icon>
                   </button>
                   <button class="btn-delete text-success border-none cursor-pointer px-2 py-1 mr-2 rounded"
-                          @click="modeClick(2,'user',data[indextr].id,indextr)">
+                          @click="modeClick(20,'user',row.id,indextr)">
                     <vs-icon icon-pack="feather" icon="icon-settings">&nbsp;多配</vs-icon>
                   </button>
 
-                  <button v-if="clickMode===1&&nodeMode==='role'&&!rbacUsers.includes(''+data[indextr].id)"
+                  <button v-if="clickMode===1&&nodeMode==='role'&&!rbacUsers.includes(''+row.id)"
                           class="btn-delete text-success border-none cursor-pointer px-2 py-1 mr-2 rounded"
-                          @click="oneConfig('user',data[indextr].id,1)">
+                          @click="oneConfig('user',row.id,1)">
                     <vs-icon icon-pack="feather" icon="icon-folder-plus">&nbsp;新增</vs-icon>
                   </button>
-                  <button v-if="clickMode===1&&nodeMode==='role'&&rbacUsers.includes(''+data[indextr].id)"
+                  <button v-if="clickMode===1&&nodeMode==='role'&&rbacUsers.includes(''+row.id)"
                           class="btn-delete text-danger border-none cursor-pointer px-2 py-1 mr-2 rounded"
-                          @click="oneConfig('user',data[indextr].id,0)">
+                          @click="oneConfig('user',row.id,0)">
                     <vs-icon icon-pack="feather" icon="icon-trash-2">&nbsp;移除</vs-icon>
                   </button>
-                  <button v-if="clickMode===1&&nodeMode==='permission'&&rbacUsers.includes(''+data[indextr].id)"
+                  <button v-if="clickMode===1&&nodeMode==='permission'&&rbacUsers.includes(''+row.id)"
                           class="btn-delete text-success border-none cursor-pointer px-2 py-1 mr-2 rounded">
                     <vs-icon icon-pack="feather" icon="icon-star"></vs-icon>
                   </button>
@@ -51,16 +68,33 @@
       </vs-col>
       <!--角色列表-->
       <vs-col vs-w="3.5">
+        <vs-table :data="[1]" class="text-center">
+          <template slot="thead">
+            <vs-th>角色配置</vs-th>
+          </template>
+          <vs-tr>
+            <vs-td v-if="clickMode===20||clickMode===40">
+              <button class="btn-delete text-success border-none cursor-pointer px-2 py-1 mr-2 rounded"
+                      @click="moreConfig('role')">
+                <vs-icon icon-pack="feather" icon="icon-settings">&nbsp;确定</vs-icon>
+              </button>
+            </vs-td>
+          </vs-tr>
+        </vs-table>
         <vs-table :data="rolePage.records">
           <template slot="thead">
+            <vs-th v-if="clickMode===20||clickMode===40">选择</vs-th>
             <vs-th>角色列表</vs-th>
             <vs-th>操作项</vs-th>
           </template>
           <template slot-scope="{data}">
-            <vs-tr :key="indextr" v-for="(tr, indextr) in data"
-                   :state="nodeMode==='role'&&indextr===clickIndex?'primary':nodeMode!=='role'&&rbacRoles.includes(''+data[indextr].id)?'success':''">
-              <vs-td :data="data[indextr].roleName">
-                <vs-list-item :title="data[indextr].roleName" :subtitle="data[indextr].roleDesc">
+            <vs-tr :data="row" :key="indextr" v-for="(row, indextr) in data"
+                   :state="nodeMode==='role'&&indextr===clickIndex?'primary':nodeMode!=='role'&&rbacRoles.includes(''+row.id)?'success':''">
+              <vs-td v-if="clickMode===20||clickMode===40">
+                <vs-checkbox :checked="row.checked" @change="nodeCheck('role',row)"/>
+              </vs-td>
+              <vs-td :data="row.roleName">
+                <vs-list-item :title="row.roleName" :subtitle="row.roleDesc">
                   <template slot="avatar">
                     <vs-avatar/>
                   </template>
@@ -69,23 +103,23 @@
               <vs-td>
                 <div class="vx-row">
                   <button class="btn-delete text-success border-none cursor-pointer px-2 py-1 mr-2 rounded"
-                          @click="modeClick(1,'role',data[indextr].id,indextr)">
+                          @click="modeClick(1,'role',row.id,indextr)">
                     <vs-icon icon-pack="feather" icon="icon-settings">&nbsp;单配</vs-icon>
                   </button>
                   <button class="btn-delete text-success border-none cursor-pointer px-2 py-1 mr-2 rounded"
-                          @click="modeClick(2,'role',data[indextr].id,indextr)">
+                          @click="modeClick(30,'role',row.id,indextr)">
                     <vs-icon icon-pack="feather" icon="icon-settings">&nbsp;多配</vs-icon>
                   </button>
 
                   <button
-                    v-if="clickMode===1&&(nodeMode==='user'||nodeMode==='permission')&&!rbacRoles.includes(''+data[indextr].id)"
+                    v-if="clickMode===1&&(nodeMode==='user'||nodeMode==='permission')&&!rbacRoles.includes(''+row.id)"
                     class="btn-delete text-success border-none cursor-pointer px-2 py-1 mr-2 rounded"
-                    @click="oneConfig('role',data[indextr].id,1)">
+                    @click="oneConfig('role',row.id,1)">
                     <vs-icon icon-pack="feather" icon="icon-folder-plus">&nbsp;新增</vs-icon>
                   </button>
-                  <button v-if="clickMode===1&&(nodeMode==='user'||nodeMode==='permission')&&rbacRoles.includes(''+data[indextr].id)"
+                  <button v-if="clickMode===1&&(nodeMode==='user'||nodeMode==='permission')&&rbacRoles.includes(''+row.id)"
                           class="btn-delete text-danger border-none cursor-pointer px-2 py-1 mr-2 rounded"
-                          @click="oneConfig('role',data[indextr].id,0)">
+                          @click="oneConfig('role',row.id,0)">
                     <vs-icon icon-pack="feather" icon="icon-trash-2">&nbsp;移除</vs-icon>
                   </button>
                 </div>
@@ -96,6 +130,19 @@
       </vs-col>
       <!--权限树-->
       <vs-col vs-w="5">
+        <vs-table :data="[1]" class="text-center">
+          <template slot="thead">
+            <vs-th>权限配置</vs-th>
+          </template>
+          <vs-tr>
+            <vs-td v-if="clickMode===30">
+              <button class="btn-delete text-success border-none cursor-pointer px-2 py-1 mr-2 rounded"
+                @click="moreConfig('permission')">
+                <vs-icon icon-pack="feather" icon="icon-settings">&nbsp;确定</vs-icon>
+              </button>
+            </vs-td>
+          </vs-tr>
+        </vs-table>
         <vs-table :data="[1]">
           <template slot="thead">
             <vs-th>资源树</vs-th>
@@ -103,7 +150,7 @@
           <template>
             <tr>
               <td>
-                <v-tree ref="tree" :data="permissionTree" :halfcheck='true' :multiple="nodeMode==='role'" :tpl="tpl"/>
+                <v-tree ref="tree" :data="permissionTree" :halfcheck='true' :multiple="clickMode===30" :tpl="tpl"/>
               </td>
             </tr>
           </template>
@@ -137,11 +184,14 @@ export default {
       queryHelper: queryHelper,
       userPage: {records: []},
       rolePage: {records: []},
+      userSelected:[],
+      roleSelected:[],
       rbacUsers: [],
       rbacRoles: [],
       rbacPermissions: [],
+      //1:单配 20:用户多配 30:角色多配 40:权限多配
       clickMode:'',
-      nodeMode: '',
+      nodeMode: 0,
       nodeModeId: '',
       clickIndex: '',
       permissionTree: [
@@ -162,17 +212,22 @@ export default {
       let titleClass = this.clickIndex === node.id ? 'node-title text-primary' : 'node-title'
       //let titleClass = node.selected ? 'node-title node-selected' : 'node-title'
       if (node.searched) titleClass += ' node-searched'
-      let addShow = this.clickMode===1 && this.nodeMode === 'role' && !this.rbacPermissions.includes('' + node.id);
-      let deleteShow = this.clickMode===1 && this.nodeMode === 'role' && this.rbacPermissions.includes('' + node.id);
-      let userShow = this.clickMode===1 && this.nodeMode === 'user' && this.rbacPermissions.includes('' + node.id);
+      let rootBtnsShow = node.id ===0;
+      let configShow = node.id!==0;
+      let addShow = configShow && this.clickMode===1 && this.nodeMode === 'role' && !this.rbacPermissions.includes('' + node.id);
+      let deleteShow = configShow && this.clickMode===1 && this.nodeMode === 'role' && this.rbacPermissions.includes('' + node.id);
+      let userShow = configShow && this.clickMode===1 && this.nodeMode === 'user' && this.rbacPermissions.includes('' + node.id);
       return <span>
         <span class={titleClass} domPropsInnerHTML={node.title}></span>
-        <button class="btn-delete text-success border-none cursor-pointer px-2 py-1 mr-2 rounded"
+        <span style={rootBtnsShow ? '' : 'display:none'}>
+
+        </span>
+        <button style={configShow ? '' : 'display:none'} class="btn-delete text-success border-none cursor-pointer px-2 py-1 mr-2 rounded"
                 onClick={() => modeClick(1,'permission', node.id, node.id)}>
           <vs-icon icon-pack="feather" icon="icon-settings">&nbsp;单配</vs-icon>
         </button>
-        <button class="btn-delete text-success border-none cursor-pointer px-2 py-1 mr-2 rounded"
-                onClick={() => modeClick(2,'permission', node.id, node.id)}>
+        <button style={configShow ? '' : 'display:none'} class="btn-delete text-success border-none cursor-pointer px-2 py-1 mr-2 rounded"
+                onClick={() => modeClick(40,'permission', node.id, node.id)}>
           <vs-icon icon-pack="feather" icon="icon-settings">&nbsp;多配</vs-icon>
         </button>
 
@@ -197,6 +252,16 @@ export default {
       getRequest('/user/rbacPage', this.queryHelper.getParams()).then(function (res) {
         if (res.success) {
           that.userPage = res.data;
+          if(that.userPage.records.length>0){
+            that.userPage.records.forEach(data=>{
+              let id = data.id;
+              if(that.rbacUsers.includes(''+id)){
+                data.checked = true;
+                that.userSelected.push(id);
+              }
+            })
+          }
+          that.getAllPermission();
         }
       })
     },
@@ -205,6 +270,15 @@ export default {
       getRequest('/user/role/rbacPage', this.queryHelper.getParams()).then(function (res) {
         if (res.success) {
           that.rolePage = res.data;
+          if(that.rolePage.records.length>0){
+            that.rolePage.records.forEach(data=>{
+              let id = data.id;
+              if(that.rbacRoles.includes(''+id)){
+                data.checked = true;
+                that.roleSelected.push(id);
+              }
+            })
+          }
         }
       })
     },
@@ -214,14 +288,18 @@ export default {
       getRequest('/user/permission/listAll').then(function (res) {
         if (res.success) {
           that.permissionList = res.data;
-          that.renderTree();
+          that.renderTree(that);
         }
       })
     },
-    renderTree() {
+    renderTree(that) {
       let dataList = this.permissionList;
       let pIdChildren = new Map();
       dataList.forEach(function (data) {
+        if(that.rbacPermissions.includes('' + data.id)){
+          data.checked = true;
+        }
+
         let parentId = data.parentId;
         data.title = data.permissionName;
 
@@ -288,6 +366,28 @@ export default {
       if (this.nodeMode === 'role' && nodeType === 'permission' ||
         this.nodeMode === 'permission' && nodeType === 'role') {
         this.rolePermissionBind([bind]);
+      }
+    },
+    moreConfig(selectedMode){
+      if(selectedMode==='permission'){
+        let selectedNodes = this.$refs.tree.getCheckedNodes();
+        selectedNodes.map(node=>node.id)
+      }
+    },
+    nodeCheck(checkMode,data){
+      let id = data.id;
+      if(data.checked===true){
+        data.checked = false
+        if(checkMode==='user'){
+          this.userSelected = this.userSelected.filter(val=>val!==id);
+        }else {
+          this.roleSelected = this.roleSelected.filter(val=>val!==id);
+        }
+      }else{
+        data.checked = true
+        if(checkMode==='user'){
+          this.roleSelected.push(id)
+        }
       }
     },
     userRoleBind(bindArray) {
