@@ -7,18 +7,19 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.yangzq.docoder.base.api.ISysAttachmentService;
 import cn.yangzq.docoder.base.entity.po.SysAttachment;
+import cn.yangzq.docoder.user.entity.SysPermission;
 import cn.yangzq.docoder.user.entity.SysUser;
 import cn.yangzq.docoder.user.form.AvatarForm;
+import cn.yangzq.docoder.user.param.RbacParam;
 import cn.yangzq.docoder.user.service.SysUserService;
 import cn.yangzq.docoder.common.core.utils.ResultVo;
 import cn.yangzq.docoder.common.mybatis.utils.Pageable;
 import cn.yangzq.docoder.user.common.FilePath;
 import cn.yangzq.docoder.user.config.DocoderConfig;
-import cn.yangzq.docoder.user.config.UserContextHolder;
-import cn.yangzq.docoder.user.maputil.FormToPoMapper;
+import cn.yangzq.docoder.user.vo.SysPermissionVo;
+import cn.yangzq.docoder.user.vo.SysUserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
+import java.util.List;
 
 /**
 *@author yangzq
@@ -40,13 +42,7 @@ import java.util.Date;
 public class SysUserController {
 
     @Autowired
-    private FormToPoMapper formToPoMapper;
-    @Autowired
     private SysUserService userService;
-    @DubboReference
-    private ISysAttachmentService attachmentService;
-    @Autowired
-    private UserContextHolder userContextHolder;
     @Autowired
     private DocoderConfig docoderConfig;
 
@@ -56,6 +52,7 @@ public class SysUserController {
         return ResultVo.success(userService.getUserPage(user,page));
     }
 
+    @ApiOperation("修改用户信息")
     @PostMapping("/user")
     public ResultVo<SysUser> update(@RequestBody SysUser user){
         userService.updateById(user);
@@ -111,20 +108,10 @@ public class SysUserController {
         return ResultVo.success();
     }
 
-    private SysAttachment buildAttachment(MultipartFile file, String savePath, Integer objId){
-        String filename = DateUtil.format(new Date(),"yyyyMMddHHmmss")+ RandomUtil.randomString(4);
-        String originalFilename = file.getOriginalFilename();
-        String fileType = "."+originalFilename.split("[.]")[1];
-        double fileSize = file.getSize()/1024D;
-        SysAttachment attachment = new SysAttachment();
-        attachment.setObjectId(objId);
-        attachment.setFileName(filename);
-        attachment.setOriginalName(originalFilename);
-        attachment.setFilePath(savePath+ File.separator+filename+fileType);
-        attachment.setFileType(fileType);
-        attachment.setFileSize(fileSize);
-        attachment.setStatus(1);
-        return attachment;
+    @ApiOperation("基于rbac的分页查询")
+    @GetMapping("/rbacPage")
+    public ResultVo<Pageable<SysUserVo>> getRbacPage(RbacParam param, Pageable<SysPermissionVo> page){
+        return ResultVo.success(userService.getRbacPage(param,page));
     }
 }
 

@@ -49,10 +49,10 @@ public class SecurityAuthenticator extends IAuthentication {
         String[] tokenVal = token.split("_");
         String userId = tokenVal[0];
         String rememberMe = tokenVal[1];
-        if("-1".equals(rememberMe)){
+        /*if("-1".equals(rememberMe)){
             redisUtil.delete(tokenCacheKey);
             throw new BadCredentialsException("访问失败:当前用户已在其他端点登录。");
-        }
+        }*/
 
         long expireTime = "1".equals(rememberMe)?docoderConfig.getTokenTimeRememberSecond():docoderConfig.getTokenTimeSecond();
         redisUtil.expire(docoderConfig.getWebCacheKeyId()+userId,expireTime, TimeUnit.SECONDS);

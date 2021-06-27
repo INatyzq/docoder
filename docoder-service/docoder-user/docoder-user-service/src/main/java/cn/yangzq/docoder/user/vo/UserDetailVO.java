@@ -33,7 +33,7 @@ public class UserDetailVO implements Serializable {
     private String avatarUrl;
 
     @ApiModelProperty("用户权限")
-    private List<PermissionVO> permissionList;
+    private List<SysPermissionVo> permissionList;
 
     @ApiModelProperty("token")
     private String token;

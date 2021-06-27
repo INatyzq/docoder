@@ -1,6 +1,6 @@
 package cn.yangzq.docoder.user.entity;
 
-import cn.yangzq.docoder.user.vo.PermissionVO;
+import cn.yangzq.docoder.user.vo.SysPermissionVo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,5 +17,5 @@ public class UserDetail extends SysUser {
 
     private String token;
 
-    private List<PermissionVO> permissionList;
+    private List<SysPermissionVo> permissionList;
 }

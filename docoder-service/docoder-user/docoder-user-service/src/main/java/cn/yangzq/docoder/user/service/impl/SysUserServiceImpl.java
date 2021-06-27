@@ -6,13 +6,14 @@ import cn.hutool.crypto.SecureUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.yangzq.docoder.user.entity.SysUser;
-import cn.yangzq.docoder.user.entity.UserDetail;
 import cn.yangzq.docoder.user.form.UserLoginForm;
 import cn.yangzq.docoder.user.form.UserRegisterForm;
 import cn.yangzq.docoder.user.maputil.PoToVoMapper;
+import cn.yangzq.docoder.user.param.RbacParam;
 import cn.yangzq.docoder.user.service.SysPermissionService;
 import cn.yangzq.docoder.user.service.SysUserService;
-import cn.yangzq.docoder.user.vo.PermissionVO;
+import cn.yangzq.docoder.user.vo.SysPermissionVo;
+import cn.yangzq.docoder.user.vo.SysUserVo;
 import cn.yangzq.docoder.user.vo.UserDetailVO;
 import cn.yangzq.docoder.common.core.exception.AuthException;
 import cn.yangzq.docoder.common.core.utils.RedisUtil;
@@ -22,7 +23,6 @@ import cn.yangzq.docoder.user.config.DocoderConfig;
 import cn.yangzq.docoder.user.mapper.SysUserMapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,14 +93,15 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         boolean rememberMe = form.isRememberMe();
         long expireTime = rememberMe?docoderConfig.getTokenTimeRememberSecond():docoderConfig.getTokenTimeSecond();
         //踢掉其他端点登录的用户
-        String userStr = redisUtil.get(webCacheKeyId + userName);
+        redisUtil.delete(webCacheKeyId + userName);
+         /*String userStr = redisUtil.get(webCacheKeyId + userName);
         if(StrUtil.isNotBlank(userStr)){
-            UserDetail cache = JSONUtil.toBean(userStr, UserDetail.class);
+           UserDetail cache = JSONUtil.toBean(userStr, UserDetail.class);
             String tokenKey = cache.getToken();
             redisUtil.setEx(webCacheKeyToken+tokenKey,userName+"_-1",expireTime,TimeUnit.SECONDS);
-        }
+        }*/
 
-        List<PermissionVO> permissionList = permissionService.getUserPermissionList(user.getId());
+        List<SysPermissionVo> permissionList = permissionService.getUserPermissionList(user.getId());
 
         //缓存数据
         UserDetailVO detailVO = poToVoMapper.sysUser(user);
@@ -149,5 +150,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         wrapper.like(StrUtil.isNotBlank(phone),"phone",phone);
         wrapper.like(StrUtil.isNotBlank(fullName),"full_name",fullName);
         return userMapper.selectPage(page,wrapper);
+    }
+
+    @Override
+    public Pageable<SysUserVo> getRbacPage(RbacParam param, Pageable<SysPermissionVo> page) {
+        return userMapper.selectRbacPage(param,page);
     }
 }

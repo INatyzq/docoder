@@ -1,7 +1,5 @@
-package cn.yangzq.docoder.user.entity;
+package cn.yangzq.docoder.user.form;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -12,17 +10,16 @@ import java.util.Date;
 
 /**
  * @author yangzq
- * @description 系统权限表
+ * @description 系统权限Form
  **/
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "SysPermission对象", description = "系统权限表")
-public class SysPermission implements Serializable {
+@ApiModel(value = "SysPermission对象", description = "系统权限Form")
+public class SysPermissionForm implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "主键id")
-    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     @ApiModelProperty(value = "父id")
@@ -45,21 +42,5 @@ public class SysPermission implements Serializable {
 
     @ApiModelProperty(value = "排序序号")
     private Integer orderNum;
-
-    @ApiModelProperty(value = "数据标识,0:无效,1:有效")
-    private Integer status = 1;
-
-    @ApiModelProperty(value = "创建者")
-    private String createdBy;
-
-    @ApiModelProperty(value = "创建时间")
-    private Date createdTime;
-
-    @ApiModelProperty(value = "修改者")
-    private String updatedBy;
-
-    @ApiModelProperty(value = "修改时间")
-    private Date updatedTime;
-
 
 }

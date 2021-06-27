@@ -1,7 +1,9 @@
 package cn.yangzq.docoder.user.service;
 
 import cn.yangzq.docoder.user.entity.SysPermission;
-import cn.yangzq.docoder.user.vo.PermissionVO;
+import cn.yangzq.docoder.user.param.RbacParam;
+import cn.yangzq.docoder.user.vo.RbacVo;
+import cn.yangzq.docoder.user.vo.SysPermissionVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -17,6 +19,12 @@ public interface SysPermissionService extends IService<SysPermission> {
      * @param userId
      * @return List<SysPermission>
      */
-    List<PermissionVO> getUserPermissionList(Integer userId);
+    List<SysPermissionVo> getUserPermissionList(Integer userId);
 
+    /**
+     * 获取rbac
+     * @param param
+     * @return
+     */
+    RbacVo getRbac(RbacParam param);
 }
