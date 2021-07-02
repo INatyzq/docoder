@@ -1,9 +1,14 @@
 package cn.yangzq.docoder.user.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.lang.Assert;
+import cn.yangzq.docoder.user.entity.RolePermission;
 import cn.yangzq.docoder.user.entity.UserRole;
 import cn.yangzq.docoder.user.form.UserRoleForm;
 import cn.yangzq.docoder.user.mapper.UserRoleMapper;
+import cn.yangzq.docoder.user.service.RolePermissionService;
 import cn.yangzq.docoder.user.service.UserRoleService;
+import cn.yangzq.docoder.user.vo.RbacVo;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
 *@author yangzq
@@ -23,6 +29,8 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
 
     @Autowired
     private UserRoleMapper userRoleMapper;
+    @Autowired
+    private RolePermissionService rolePermissionService;
 
     @Override
     public void bindBatch(List<UserRoleForm> forms) {
@@ -41,10 +49,57 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
                 wrapper.eq("USER_ID",userId);
                 wrapper.eq("ROLE_ID",roleId);
                 userRoleMapper.delete(wrapper);
+                wrapper.clear();
             }
         });
         if(insertList.size()>0){
             saveBatch(insertList);
+        }
+    }
+
+    @Override
+    public void bindAll(RbacVo rbac) {
+        Set<Integer> userIds = rbac.getUserIds();
+        Set<Integer> roleIds = rbac.getRoleIds();
+        Set<Integer> permissionIds = rbac.getPermissionIds();
+
+        int num = (CollectionUtil.isNotEmpty(userIds)?1:0)+(CollectionUtil.isNotEmpty(roleIds)?1:0)+(CollectionUtil.isNotEmpty(permissionIds)?1:0);
+        Assert.isTrue(num>1,"操作失败：缺少绑定关系");
+
+        List<UserRole> userRoles = new ArrayList<>();
+        List<RolePermission> rolePermissions = new ArrayList<>();
+
+        userIds.forEach(userId->{
+            roleIds.forEach(roleId->{
+                UserRole ur = new UserRole();
+                ur.setUserId(userId);
+                ur.setRoleId(roleId);
+                userRoles.add(ur);
+            });
+        });
+
+        roleIds.forEach(roleId->{
+            permissionIds.forEach(permissionId->{
+                RolePermission rp = new RolePermission();
+                rp.setRoleId(roleId);
+                rp.setPermissionId(permissionId);
+                rolePermissions.add(rp);
+            });
+        });
+
+        //清除
+        UpdateWrapper<UserRole> deleteUR = new UpdateWrapper<>();
+        deleteUR.in("USER_ID",userIds);
+        userRoleMapper.delete(deleteUR);
+        UpdateWrapper<RolePermission> deleteRP = new UpdateWrapper<>();
+        deleteUR.in("ROLE_ID",roleIds);
+        rolePermissionService.remove(deleteRP);
+        //保存
+        if(userRoles.size()>0){
+            this.saveBatch(userRoles);
+        }
+        if(rolePermissions.size()>0){
+            rolePermissionService.saveBatch(rolePermissions);
         }
     }
 }

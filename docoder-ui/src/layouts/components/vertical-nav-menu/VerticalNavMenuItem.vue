@@ -23,13 +23,13 @@
         :class="[{'router-link-active': activeLink}]"
         :to="to"
         :target="target" >
-          <vs-icon v-if="!featherIcon" :icon-pack="iconPack" :icon="icon" />
+          <vs-icon v-if="!featherIcon" :icon-pack="iconPack" :icon="icon" class="w-6 small"/>
           <feather-icon v-else :class="{'w-3 h-3': iconSmall}" :icon="icon" />
           <slot />
       </router-link>
 
-      <a v-else :target="target" :href="href" tabindex="-1">
-        <vs-icon v-if="!featherIcon" :icon-pack="iconPack" :icon="icon" />
+      <a v-else :target="target" :href="href" tabindex="-1" class="navigation-header truncate">
+        <vs-icon v-if="!featherIcon" :icon-pack="iconPack" :icon="icon" class="w-6 small"/>
         <feather-icon v-else :class="{'w-3 h-3': iconSmall}" :icon="icon" />
         <slot />
       </a>

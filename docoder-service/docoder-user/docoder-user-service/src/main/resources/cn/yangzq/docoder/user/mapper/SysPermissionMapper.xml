@@ -40,4 +40,11 @@
             </if>
         </trim>
     </select>
+
+    <select id="selectTreeNode" resultType="cn.yangzq.docoder.user.vo.PermissionTreeVo">
+        select
+         id,parent_id,permission_name as title,icon
+        from sys_permission
+        where status = 1
+    </select>
 </mapper>

@@ -41,6 +41,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
                 wrapper.eq("ROLE_ID",roleId);
                 wrapper.eq("PERMISSION_ID",permissionId);
                 rolePermissionMapper.delete(wrapper);
+                wrapper.clear();
             }
         });
         if(insertList.size()>0){

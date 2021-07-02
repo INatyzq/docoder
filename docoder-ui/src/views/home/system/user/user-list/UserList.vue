@@ -144,7 +144,7 @@ export default {
   data() {
     return {
       FILE_SERVER:FILE_SERVER,
-      queryHelper: queryHelper,
+      queryHelper: queryHelper.new(),
       listPage: {records: []},
     }
   },

@@ -42,6 +42,15 @@
         <if test="param.mode=='permission'">
             and instr(concat(',',rp.permissionIds,','),concat(',',#{param.id,jdbcType=INTEGER},','))
         </if>
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="param.searchVal!=null and param.searchVal!=''">
+                and (
+                    sr.role_name like concat('%',#{param.searchVal,jdbcType=VARCHAR},'%')
+                    or
+                    sr.role_desc like concat('%',#{param.searchVal,jdbcType=VARCHAR},'%')
+                )
+            </if>
+        </trim>
         order by
         <if test="param.mode=='user'">
             ur.userIds desc,

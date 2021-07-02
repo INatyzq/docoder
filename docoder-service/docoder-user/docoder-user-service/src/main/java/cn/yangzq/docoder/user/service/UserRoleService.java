@@ -2,6 +2,7 @@ package cn.yangzq.docoder.user.service;
 
 import cn.yangzq.docoder.user.entity.UserRole;
 import cn.yangzq.docoder.user.form.UserRoleForm;
+import cn.yangzq.docoder.user.vo.RbacVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -17,4 +18,10 @@ public interface UserRoleService extends IService<UserRole> {
      * @param forms
      */
     void bindBatch(List<UserRoleForm> forms);
+
+    /**
+     * 批量绑定用户和角色和权限的关系
+     * @param rbac
+     */
+    void bindAll(RbacVo rbac);
 }

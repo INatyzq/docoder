@@ -4,6 +4,7 @@ package cn.yangzq.docoder.user.controller;
 import cn.yangzq.docoder.common.core.utils.ResultVo;
 import cn.yangzq.docoder.user.form.UserRoleForm;
 import cn.yangzq.docoder.user.service.UserRoleService;
+import cn.yangzq.docoder.user.vo.RbacVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,11 @@ public class UserRoleController {
         return ResultVo.success();
     }
 
+    @ApiOperation("批量绑定用户和角色和权限的关系")
+    @PostMapping("/bindAll")
+    public ResultVo<Object> bindAll(@RequestBody RbacVo rbac){
+        userRoleService.bindAll(rbac);
+        return ResultVo.success();
+    }
 }
 

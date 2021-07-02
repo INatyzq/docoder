@@ -128,7 +128,7 @@
                 return <span>
                           <span class="text-primary">
                               &nbsp;&nbsp;
-                            <feather-icon icon={node.icon} svgClasses="h-4 w-4 mb-1 stroke-current text-primary" />
+                            <vs-icon icon-pack="feather" icon={node.icon} svgClasses="h-4 w-4 mb-1 stroke-current text-primary" />
                           </span>
                           <span class={titleClass} domPropsInnerHTML={node.title} onClick={() => {
                               this.$refs.tree.nodeSelected(node)

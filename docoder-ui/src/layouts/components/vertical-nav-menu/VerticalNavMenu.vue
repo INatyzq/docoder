@@ -67,7 +67,7 @@
             <!-- Group Header -->
             <span v-if="item.header && !verticalNavMenuItemsMin" class="navigation-header truncate"
                   :key="`header-${index}`">
-              <feather-icon v-if="item.icon"  :icon="item.icon" svgClasses="h-3 w-3 stroke-current text-primary" />
+              <vs-icon icon-pack="feather" v-if="item.icon"  :icon="item.icon" svgClasses="h-3 w-3 stroke-current text-primary" />
               {{ item.header }}
             </span>
             <!-- /Group Header -->

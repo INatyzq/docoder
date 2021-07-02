@@ -6,6 +6,7 @@ import cn.yangzq.docoder.user.param.RbacParam;
 import cn.yangzq.docoder.user.service.SysPermissionService;
 import cn.yangzq.docoder.user.mapper.SysPermissionMapper;
 import cn.yangzq.docoder.user.maputil.PoToVoMapper;
+import cn.yangzq.docoder.user.vo.PermissionTreeVo;
 import cn.yangzq.docoder.user.vo.RbacVo;
 import cn.yangzq.docoder.user.vo.SysPermissionVo;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -13,13 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
-*@author yangzq
-*@description 系统权限表 服务实现类
-**/
+ * @author yangzq
+ * @description 系统权限表 服务实现类
+ **/
 @Transactional
 @Component
 public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, SysPermission> implements SysPermissionService {
@@ -31,7 +32,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 
     @Override
     public List<SysPermissionVo> getUserPermissionList(Integer userId) {
-        List<SysPermission> permissionList= permissionMapper.selectUserPermissionList(userId);
+        List<SysPermission> permissionList = permissionMapper.selectUserPermissionList(userId);
         return poToVoMapper.permissionList(permissionList);
     }
 
@@ -41,17 +42,59 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 
         Set<String> idsStrList = permissionMapper.selectRbac(param);
 
-        Set<String> userIds = vo.getUserIds();
-        Set<String> roleIds = vo.getRoleIds();
-        Set<String> permissionIds = vo.getPermissionIds();
-        idsStrList.forEach(idsStr->{
-            if(StrUtil.isNotBlank(idsStr)){
+        Set<Integer> userIds = vo.getUserIds();
+        Set<Integer> roleIds = vo.getRoleIds();
+        Set<Integer> permissionIds = vo.getPermissionIds();
+        idsStrList.forEach(idsStr -> {
+            if (StrUtil.isNotBlank(idsStr)) {
                 String[] ids = idsStr.split("_");
-                userIds.add(StrUtil.blankToDefault(ids[0],null));
-                roleIds.add(StrUtil.blankToDefault(ids[1],null));
-                permissionIds.add(StrUtil.blankToDefault(ids[2],null));
+                userIds.add(Integer.parseInt(StrUtil.blankToDefault(ids[0], "-1")));
+                roleIds.add(Integer.parseInt(StrUtil.blankToDefault(ids[1], "-1")));
+                permissionIds.add(Integer.parseInt(StrUtil.blankToDefault(ids[2], "-1")));
             }
         });
         return vo;
+    }
+
+    @Override
+    public List<PermissionTreeVo> getTree() {
+        List<PermissionTreeVo> permissionList = permissionMapper.selectTreeNode();
+        Map<Integer, List<PermissionTreeVo>> pidChildrenMap = new TreeMap<>();
+        Map<Integer, PermissionTreeVo> idNode = new HashMap<>();
+
+        permissionList.forEach(node -> {
+            Integer parentId = node.getParentId();
+            List<PermissionTreeVo> children = pidChildrenMap.computeIfAbsent(parentId, list -> new ArrayList<>());
+            children.add(node);
+            idNode.put(node.getId(), node);
+        });
+
+        permissionList.forEach(node -> {
+            node.setChildren(pidChildrenMap.get(node.getId()));
+            recursionFindChildrenId(node,node,idNode,pidChildrenMap.get(node.getParentId()));
+        });
+
+        return permissionList.stream().filter(item->item.getParentId()==0).collect(Collectors.toList());
+    }
+
+    /**
+     * 递归查找父节点id或子节点id列表
+     *
+     * @param node
+     * @param idNode
+     * @param childrenList
+     */
+    private void recursionFindChildrenId(PermissionTreeVo original,PermissionTreeVo node, Map<Integer, PermissionTreeVo> idNode, List<PermissionTreeVo> childrenList) {
+        if(childrenList==null||childrenList.size()==0){
+            return;
+        }
+        Integer parentId = node.getParentId();
+        PermissionTreeVo parentNode = idNode.get(parentId);
+        if (parentNode != null) {
+            Set<Integer> childrenIds = parentNode.getChildrenIds();
+            childrenIds.addAll(childrenList.stream().map(PermissionTreeVo::getId).collect(Collectors.toList()));
+            recursionFindChildrenId(original,parentNode, idNode, childrenList);
+        }
+        original.getPids().add(parentId);
     }
 }

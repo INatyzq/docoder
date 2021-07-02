@@ -3,7 +3,6 @@
     Description: Ag Grid table
     ----------------------------------------------------------------------------------------
     Item Name: Vuexy - Vuejs, HTML & Laravel Admin Dashboard Template
-    Author: Pixinvent
     Author URL: http://www.themeforest.net/user/pixinvent
 ========================================================================================== -->
 
@@ -85,7 +84,7 @@
         props: {},
         data() {
             return {
-                queryHelper:queryHelper,
+                queryHelper:queryHelper.new(),
                 primaryKey: "id",
                 dataListBak: new Map(),
                 updateList: new Map(),

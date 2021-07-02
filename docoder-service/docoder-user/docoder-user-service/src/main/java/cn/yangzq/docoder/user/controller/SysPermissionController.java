@@ -8,6 +8,7 @@ import cn.yangzq.docoder.user.maputil.FormToPoMapper;
 import cn.yangzq.docoder.user.maputil.PoToVoMapper;
 import cn.yangzq.docoder.user.param.RbacParam;
 import cn.yangzq.docoder.user.service.SysPermissionService;
+import cn.yangzq.docoder.user.vo.PermissionTreeVo;
 import cn.yangzq.docoder.user.vo.RbacVo;
 import cn.yangzq.docoder.user.vo.SysPermissionVo;
 import io.swagger.annotations.Api;
@@ -38,6 +39,12 @@ public class SysPermissionController {
     public ResultVo<List<SysPermissionVo>> getListAll(){
         List<SysPermission> list = permissionService.list();
         return ResultVo.success(poToVoMapper.permissionList(list));
+    }
+
+    @ApiOperation("获取树形数据")
+    @GetMapping("/tree")
+    public ResultVo<List<PermissionTreeVo>> getTree(){
+        return ResultVo.success(permissionService.getTree());
     }
 
     @ApiOperation("保存或更新")

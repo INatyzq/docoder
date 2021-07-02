@@ -25,13 +25,13 @@
         <span class="flex items-center w-full">
 
           <!-- Group Icon -->
-          <feather-icon
+          <vs-icon icon-pack="feather"
             v-if        = "group.icon  || (this.groupIndex > Math.floor(this.groupIndex))"
             :icon       = "group.icon  || 'CircleIcon'"
             :svgClasses = "{ 'w-3 h-3' : this.groupIndex % 1 != 0 }" />
 
           <!-- Group Name -->
-          <span v-show="!verticalNavMenuItemsMin" class="truncate mr-3 select-none">{{ group.name }}</span>
+          <span v-show="!verticalNavMenuItemsMin" class="truncate mr-3 select-none">&nbsp;{{ group.name }}</span>
 
           <!-- Group Tag -->
           <vs-chip class="ml-auto mr-4" :color="group.tagColor" v-if="group.tag && !verticalNavMenuItemsMin">{{ group.tag }}</vs-chip>
@@ -68,10 +68,12 @@
             :index  = "groupIndex + '.' + index"
             :to="groupItem.slug !== 'external' ? groupItem.url : null"
             :href="groupItem.slug === 'external' ? groupItem.url : null"
-            :icon   = "groupItem.icon||'CircleIcon'"
+            :featherIcon="false"
+            iconPack="feather"
+            :icon   = "groupItem.icon||'icon-star'"
             :slug   = "groupItem.slug"
             :target = "groupItem.target">
-              <span class="truncate">{{ groupItem.name }}</span>
+              <span class="truncate">&nbsp;{{ groupItem.name }}</span>
               <vs-chip class="ml-auto" :color="groupItem.tagColor" v-if="groupItem.tag">{{ groupItem.tag }}</vs-chip>
           </v-nav-menu-item>
 
