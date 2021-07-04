@@ -1,6 +1,5 @@
 package cn.yangzq.docoder.user.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.json.JSONObject;
@@ -8,20 +7,21 @@ import cn.hutool.json.JSONUtil;
 import cn.yangzq.docoder.user.entity.SysUser;
 import cn.yangzq.docoder.user.form.UserLoginForm;
 import cn.yangzq.docoder.user.form.UserRegisterForm;
-import cn.yangzq.docoder.user.maputil.PoToVoMapper;
+import cn.yangzq.docoder.user.maputil.VoToVoMapper;
 import cn.yangzq.docoder.user.param.RbacParam;
-import cn.yangzq.docoder.user.service.SysPermissionService;
 import cn.yangzq.docoder.user.service.SysUserService;
 import cn.yangzq.docoder.user.vo.SysPermissionVo;
 import cn.yangzq.docoder.user.vo.SysUserVo;
-import cn.yangzq.docoder.user.vo.UserDetailVO;
+import cn.yangzq.docoder.user.vo.UserAuthDetailVO;
 import cn.yangzq.docoder.common.core.exception.AuthException;
 import cn.yangzq.docoder.common.core.utils.RedisUtil;
 import cn.yangzq.docoder.common.mybatis.utils.Pageable;
 import cn.yangzq.docoder.common.security.security.JWTUtil;
 import cn.yangzq.docoder.user.config.DocoderConfig;
 import cn.yangzq.docoder.user.mapper.SysUserMapper;
+import cn.yangzq.docoder.user.vo.UserDetailVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -45,9 +45,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Autowired
     private RedisUtil redisUtil;
     @Autowired
-    private SysPermissionService permissionService;
-    @Autowired
-    private PoToVoMapper poToVoMapper;
+    private VoToVoMapper voToVoMapper;
 
     @Override
     public boolean isRepeat(UserRegisterForm form) {
@@ -61,7 +59,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public UserDetailVO login(UserLoginForm form) {
+    public UserAuthDetailVO login(UserLoginForm form) {
         String userName = form.getUserName();
         String userPwd = form.getUserPwd();
         userPwd = SecureUtil.md5(userPwd);
@@ -101,12 +99,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             redisUtil.setEx(webCacheKeyToken+tokenKey,userName+"_-1",expireTime,TimeUnit.SECONDS);
         }*/
 
-        List<SysPermissionVo> permissionList = permissionService.getUserPermissionList(user.getId());
-
         //缓存数据
-        UserDetailVO detailVO = poToVoMapper.sysUser(user);
+        UserDetailVO userDetail = userMapper.selectUserDetail(user.getId(), null);
+        UserAuthDetailVO detailVO = voToVoMapper.userDetail(userDetail);
         detailVO.setToken(jwtToken);
-        detailVO.setPermissionList(permissionList);
         detailVO.setRememberMe(rememberMe);
 
         Integer id = user.getId();
@@ -118,18 +114,16 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public UserDetailVO refresh(Integer userId){
+    public UserAuthDetailVO refresh(Integer userId){
         String userStr = redisUtil.get(docoderConfig.getWebCacheKeyId() + userId);
         if(StrUtil.isBlank(userStr)){
             throw new AuthException("刷新失败：凭证失效！");
         }
-        UserDetailVO detailVO = JSONUtil.toBean(userStr, UserDetailVO.class);
-        SysUser user = userMapper.selectById(userId);
-        BeanUtil.copyProperties(user,detailVO);
+        UserAuthDetailVO detailVO = JSONUtil.toBean(userStr, UserAuthDetailVO.class);
 
-        boolean rememberMe = detailVO.isRememberMe();
+        boolean rememberMe = detailVO.getRememberMe();
         long expireTime = rememberMe?docoderConfig.getTokenTimeRememberSecond():docoderConfig.getTokenTimeSecond();
-        Integer id = user.getId();
+        Integer id = detailVO.getId();
         String tokenVal = id+"_"+(rememberMe?1:0)+"_"+System.currentTimeMillis();
         redisUtil.setEx(docoderConfig.getWebCacheKeyId()+id,JSONUtil.toJsonStr(detailVO),expireTime, TimeUnit.SECONDS);
         redisUtil.setEx(docoderConfig.getWebCacheKeyToken()+detailVO.getToken(),tokenVal,expireTime, TimeUnit.SECONDS);
@@ -137,23 +131,30 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public Pageable<SysUser> getUserPage(SysUser user, Pageable<SysUser> page) {
-        QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
-        String userName = user.getUserName();
-        String nickname = user.getNickname();
-        String email = user.getEmail();
-        String phone = user.getPhone();
-        String fullName = user.getFullName();
-        wrapper.like(StrUtil.isNotBlank(userName),"user_name",userName);
-        wrapper.like(StrUtil.isNotBlank(nickname),"nickname",nickname);
-        wrapper.like(StrUtil.isNotBlank(email),"email",email);
-        wrapper.like(StrUtil.isNotBlank(phone),"phone",phone);
-        wrapper.like(StrUtil.isNotBlank(fullName),"full_name",fullName);
-        return userMapper.selectPage(page,wrapper);
+    public Pageable<SysUserVo> getUserPage(SysUserVo param, Pageable<SysUserVo> page) {
+        return userMapper.selectDataPage(param,page);
+    }
+
+    @Override
+    public UserDetailVO getUserDetail(Integer userId) {
+        return userMapper.selectUserDetail(userId,null);
+    }
+
+    @Override
+    public UserDetailVO getUserDetail(String userName) {
+        return userMapper.selectUserDetail(null,userName);
     }
 
     @Override
     public Pageable<SysUserVo> getRbacPage(RbacParam param, Pageable<SysPermissionVo> page) {
         return userMapper.selectRbacPage(param,page);
+    }
+
+    @Override
+    public void updateStatus(List<Integer> ids,Integer status) {
+        UpdateWrapper<SysUser> wrapper = new UpdateWrapper<>();
+        wrapper.set("STATUS",status);
+        wrapper.in("id",ids);
+        userMapper.update(null,wrapper);
     }
 }

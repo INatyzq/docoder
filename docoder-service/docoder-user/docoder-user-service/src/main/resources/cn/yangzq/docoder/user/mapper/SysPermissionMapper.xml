@@ -2,9 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.yangzq.docoder.user.mapper.SysPermissionMapper">
 
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.yangzq.docoder.user.entity.SysPermission">
+        <id column="id" property="id" />
+        <result column="parent_id" property="parentId" />
+        <result column="permission_name" property="permissionName" />
+        <result column="permission_type" property="permissionType" />
+        <result column="permission_desc" property="permissionDesc" />
+        <result column="resource_url" property="resourceUrl" />
+        <result column="icon" property="icon" />
+        <result column="order_num" property="orderNum" />
+        <result column="status" property="status" />
+        <result column="created_by" property="createdBy" />
+        <result column="created_time" property="createdTime" />
+        <result column="updated_by" property="updatedBy" />
+        <result column="updated_time" property="updatedTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, parent_id, permission_name, permission_type, permission_desc, resource_url, icon, order_num, status, created_by, created_time, updated_by, updated_time
+    </sql>
+
     <select id="selectUserPermissionList" resultType="cn.yangzq.docoder.user.entity.SysPermission">
-        SELECT t1.*
-            FROM sys_permission t1
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_permission t1
         INNER JOIN role_permission t2
         ON t1.id = t2.permission_id
         INNER JOIN sys_role t3
@@ -14,6 +37,7 @@
         INNER JOIN sys_user t5
         ON t4.user_id = t5.id
         WHERE t5.id = #{userId,jdbcType=INTEGER}
+        order by t1.order_num
     </select>
 
     <select id="selectRbac" resultType="string">
@@ -29,6 +53,7 @@
         left join sys_permission sp
         on rp.permission_id = sp.id
         <trim prefix="where" prefixOverrides="and|or">
+            and su.status=1 and sr.status=1 and sp.status=1
             <if test="mode=='user'">
                 and su.id = #{id,jdbcType=INTEGER}
             </if>
@@ -46,5 +71,6 @@
          id,parent_id,permission_name as title,icon
         from sys_permission
         where status = 1
+        order by order_num
     </select>
 </mapper>

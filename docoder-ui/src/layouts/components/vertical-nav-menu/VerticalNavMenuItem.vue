@@ -22,9 +22,9 @@
         exact
         :class="[{'router-link-active': activeLink}]"
         :to="to"
-        :target="target" >
-          <vs-icon v-if="!featherIcon" :icon-pack="iconPack" :icon="icon" class="w-6 small"/>
-          <feather-icon v-else :class="{'w-3 h-3': iconSmall}" :icon="icon" />
+        :target="target" ><span class="truncate">
+        <vs-icon v-if="!featherIcon" :icon-pack="iconPack" :icon="icon" class="pb-1 mr-1 w-6 small"/>
+          <feather-icon v-else :class="{'w-3 h-3': iconSmall}" :icon="icon" /></span>
           <slot />
       </router-link>
 

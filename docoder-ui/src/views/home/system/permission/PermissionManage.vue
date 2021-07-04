@@ -8,7 +8,7 @@
       <vs-popup classContent="popup-example" title="权限详情" :active.sync="openPermissionDetail">
         <div class="vx-row mb-2">
           <div class="vx-col w-full">
-            <vs-input class="w-full" name="权限名称"
+            <vs-input class="w-full"
                       v-validate="'required'" data-vv-validate-on="blur"
                       v-model="permissionData.permissionName"
                       icon-pack="feather" icon="icon-bookmark" icon-no-border label="名称"/>
@@ -17,7 +17,7 @@
         </div>
         <div class="vx-row mb-2">
           <div class="vx-col w-full">
-            <vs-input class="w-full" name="资源URL"
+            <vs-input class="w-full"
                       v-validate="'required'" data-vv-validate-on="blur"
                       v-model="permissionData.resourceUrl"
                       icon-pack="feather" icon="icon-link-2" icon-no-border label="资源URL"/>

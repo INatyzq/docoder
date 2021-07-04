@@ -12,7 +12,7 @@ import cn.yangzq.docoder.user.form.UserLoginForm;
 import cn.yangzq.docoder.user.form.UserRegisterForm;
 import cn.yangzq.docoder.user.service.SysUserService;
 import cn.yangzq.docoder.user.vo.RegisterPrepareVO;
-import cn.yangzq.docoder.user.vo.UserDetailVO;
+import cn.yangzq.docoder.user.vo.UserAuthDetailVO;
 import cn.yangzq.docoder.common.core.exception.ValidateException;
 import cn.yangzq.docoder.common.core.utils.ResultVo;
 import cn.yangzq.docoder.user.maputil.FormToPoMapper;
@@ -59,13 +59,13 @@ public class LoginController {
 
     @ApiOperation("登录")
     @PostMapping("/login")
-    public ResultVo<UserDetailVO> login(@RequestBody UserLoginForm form){
+    public ResultVo<UserAuthDetailVO> login(@RequestBody UserLoginForm form){
         return ResultVo.success(userService.login(form));
     }
 
     @ApiOperation("刷新用户信息")
     @GetMapping("/refresh/{id}")
-    public ResultVo<UserDetailVO> refresh(@PathVariable("id") Integer id){
+    public ResultVo<UserAuthDetailVO> refresh(@PathVariable("id") Integer id){
         return ResultVo.success(userService.refresh(id));
     }
 

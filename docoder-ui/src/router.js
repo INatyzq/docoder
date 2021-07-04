@@ -39,7 +39,7 @@ const router = new Router({
       component: () => import('./layouts/main/Main.vue'),
       children: [
         // =============================================================================
-        // Theme Routes
+        // 系统设置
         // =============================================================================
         {
           path: 'home/system/permission',
@@ -122,6 +122,23 @@ const router = new Router({
             pageTitle: '用户详情'
           }
         },
+        // =============================================================================
+        // 账户设置
+        // =============================================================================
+        {
+          path: 'home/account',
+          name: 'home-account',
+          component: () => import('@/views/home/account/UserView.vue'),
+          meta: {
+            breadcrumb: [
+              {title: '主页'},
+              {title: '账户设置'},
+              {title: '我的账户', active: true}
+            ],
+            pageTitle: '用户详情'
+          }
+        },
+
         {
           path: 'error-404',
           name: 'error-404',

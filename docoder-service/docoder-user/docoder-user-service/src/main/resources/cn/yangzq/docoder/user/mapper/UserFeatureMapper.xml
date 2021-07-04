@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.yangzq.docoder.user.mapper.UserFeatureMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.yangzq.docoder.user.entity.UserFeature">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="level_val" property="levelVal" />
+        <result column="tags" property="tags" />
+        <result column="hobby" property="hobby" />
+        <result column="signature" property="signature" />
+        <result column="updated_time" property="updatedTime" />
+    </resultMap>
 
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, level_val, tags, hobby, signature, updated_time
+    </sql>
 </mapper>

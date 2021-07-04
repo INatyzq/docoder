@@ -16,6 +16,10 @@ public class BusinessException extends BasicException{
         super(code,msg);
     }
 
+    public BusinessException(String msg,boolean isHandle){
+        super(msg,true);
+    }
+
     public BusinessException(Throwable throwable){
         super(throwable);
     }

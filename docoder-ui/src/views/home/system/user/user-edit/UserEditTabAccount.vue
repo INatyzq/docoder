@@ -29,8 +29,18 @@
         <span class="text-danger text-sm">{{ errors.first('idCard') }}</span>
 
         <div class="w-full mt-4">
-          <label class="vs-input--label">生日</label>
-          <datepicker :language="language['zh']" format="yyyy-MM-dd" v-model="data_local.birthday"></datepicker>
+          <vs-row>
+            <vs-col vs-w="6">
+              <label class="text-sm">性别</label>
+              <vs-select class="selectExample" v-model="data_local.sex" name="sex">
+                <vs-select-item :key="index" :value="item.value" :text="item.text" v-for="(item,index) in [{text:'男',value:1},{text:'女',value:0}]" />
+              </vs-select>
+            </vs-col>
+            <vs-col vs-w="6">
+              <label class="text-sm text-warning">密码</label>
+              <vs-input type="password" class="w-full" v-model="password" placeholder="可输入需要修改的密码" name="password"/>
+            </vs-col>
+          </vs-row>
         </div>
 
       </div>
@@ -38,10 +48,8 @@
       <div class="vx-col md:w-1/3 w-full">
 
         <div class="w-full mt-4">
-          <label class="text-sm">性别</label>
-          <vs-select class="selectExample" v-model="data_local.sex" name="sex">
-            <vs-select-item :key="index" :value="item.value" :text="item.text" v-for="(item,index) in [{text:'男',value:1},{text:'女',value:0}]" />
-          </vs-select>
+          <label class="vs-input--label">生日</label>
+          <datepicker :language="language['zh']" format="yyyy-MM-dd" v-model="data_local.birthday"></datepicker>
         </div>
 
         <vs-input v-validate="'phone'" data-vv-validate-on="blur" class="w-full mt-4" label="手机" v-model="data_local.phone" name="phone"/>
@@ -75,6 +83,7 @@ import notify from "../../../../../core/notify/notify";
 import moment from 'moment';
 import {FILE_SERVER} from '@/core/utils/appConts';
 import userService from "@/service/userService";
+import stringUtil from "@/core/utils/stringUtil";
 
 export default {
   components: {
@@ -103,6 +112,7 @@ export default {
       language: lang,
       data_local: {},
       currentUser:userService.getUserDetail(),
+      password:''
     }
   },
   methods: {
@@ -114,9 +124,15 @@ export default {
       this.data_local.birthday = moment(this.data_local.birthday).format('YYYY-MM-DD');
       let that = this;
       let id = this.data_local.id;
+
+      if(stringUtil.isNotBlank(this.password)){
+        this.data_local.userPwd = this.$md5(this.password)
+      }
+
       postRequest('/user/user', this.data_local).then((res) => {
         if (res.success) {
           notify.success('保存操作完成！');
+          this.password = '';
           if(that.currentUser.id===id){
             that.$store.dispatch('auth/refresh');
           }

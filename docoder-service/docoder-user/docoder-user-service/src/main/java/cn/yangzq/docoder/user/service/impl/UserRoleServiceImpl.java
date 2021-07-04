@@ -2,6 +2,9 @@ package cn.yangzq.docoder.user.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.StrUtil;
+import cn.yangzq.docoder.common.core.exception.BusinessException;
+import cn.yangzq.docoder.common.core.utils.ResultVo;
 import cn.yangzq.docoder.user.entity.RolePermission;
 import cn.yangzq.docoder.user.entity.UserRole;
 import cn.yangzq.docoder.user.form.UserRoleForm;
@@ -63,8 +66,13 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
         Set<Integer> roleIds = rbac.getRoleIds();
         Set<Integer> permissionIds = rbac.getPermissionIds();
 
-        int num = (CollectionUtil.isNotEmpty(userIds)?1:0)+(CollectionUtil.isNotEmpty(roleIds)?1:0)+(CollectionUtil.isNotEmpty(permissionIds)?1:0);
-        Assert.isTrue(num>1,"操作失败：缺少绑定关系");
+        String flag = (CollectionUtil.isNotEmpty(userIds)?"a":"")+(CollectionUtil.isNotEmpty(roleIds)?"b":"")+(CollectionUtil.isNotEmpty(permissionIds)?"c":"");
+        if(StrUtil.isBlank(flag)){
+            return;
+        }
+        if("ac".equals(flag)){
+            throw new BusinessException("不允许直接给用户分配权限！",true);
+        }
 
         List<UserRole> userRoles = new ArrayList<>();
         List<RolePermission> rolePermissions = new ArrayList<>();

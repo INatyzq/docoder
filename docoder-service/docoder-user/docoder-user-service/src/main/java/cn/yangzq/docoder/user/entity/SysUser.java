@@ -48,7 +48,7 @@ public class SysUser implements Serializable {
     @ApiModelProperty(value = "地址")
     private String address;
 
-    @ApiModelProperty(value = "状态,0:未激活,1:已激活,3:失效")
+    @ApiModelProperty(value = "状态,-1:删除,0:未激活,1:已激活,2:禁用")
     private Integer status = 1;
 
     @ApiModelProperty(value = "性别;1:男;0:女")

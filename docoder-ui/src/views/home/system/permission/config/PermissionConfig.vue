@@ -32,7 +32,7 @@
           </template>
           <vs-tr>
             <vs-td>
-              <vs-input icon-pack="feather" icon="icon-search" placeholder="用户名/昵称" v-model="userQueryHelper.searchVal" @blur="getUserPage" class="is-label-placeholder" />
+              <vs-input icon-pack="feather" icon="icon-search" placeholder="用户名|昵称" v-model="userQueryHelper.searchVal" @blur="getUserPage" class="is-label-placeholder" />
             </vs-td>
           </vs-tr>
           <vs-tr>
@@ -112,7 +112,7 @@
           </template>
           <vs-tr>
             <vs-td>
-              <vs-input icon-pack="feather" icon="icon-search" placeholder="角色名/角色描述" v-model="roleQueryHelper.searchVal" @blur="getRolePage" class="is-label-placeholder" />
+              <vs-input icon-pack="feather" icon="icon-search" placeholder="角色名|角色描述" v-model="roleQueryHelper.searchVal" @blur="getRolePage" class="is-label-placeholder" />
             </vs-td>
           </vs-tr>
           <vs-tr>
@@ -189,7 +189,7 @@
           </template>
           <vs-tr>
             <vs-td>
-              <vs-input icon-pack="feather" icon="icon-search" placeholder="资源名称/url" v-model="treeSearchword" @blur="$refs.tree.searchNodes(treeSearchword)" class="is-label-placeholder" />
+              <vs-input icon-pack="feather" icon="icon-search" placeholder="资源名称|Url" v-model="treeSearchword" @blur="$refs.tree.searchNodes(treeSearchword)" class="is-label-placeholder" />
             </vs-td>
           </vs-tr>
           <vs-tr>
@@ -236,6 +236,14 @@ export default {
     this.getUserPage();
     this.getRolePage();
     this.getAllPermission();
+  },
+  watch: {
+    'userQueryHelper.current'() {
+      this.getUserPage();
+    },
+    'roleQueryHelper.current'() {
+      this.getRolePage();
+    }
   },
   data() {
     return {
@@ -604,12 +612,21 @@ export default {
       let userIds = this.userPage.records.filter(data=>data.checked===true).map(data=>data.id);
       let roleIds = this.rolePage.records.filter(data=>data.checked===true).map(data=>data.id);
       let permissionIds = this.$refs.tree.getCheckedNodes().map(item=>item.id);
-      let num = (userIds&&userIds.length>0?1:0)+(roleIds&&roleIds.length>0?1:0)+(permissionIds&&permissionIds.length>0?1:0);
-      if(num<2){
-        notify.warning("操作失败：缺少绑定关系！");
+      let flag = (userIds&&userIds.length>0?'a':'')+(roleIds&&roleIds.length>0?'b':'')+(permissionIds&&permissionIds.length>0?'c':'');
+      let data = {'userIds':userIds,'roleIds':roleIds,'permissionIds':permissionIds}
+
+      if(flag===''){
+        this.allCancel(this);
         return ;
       }
-      let data = {'userIds':userIds,'roleIds':roleIds,'permissionIds':permissionIds}
+      if(flag.length<2){
+        notify.warning('缺少绑定关系！')
+        return ;
+      }
+      if(flag==='ac'){
+        notify.warning('不允许直接给用户分配权限！')
+        return ;
+      }
       let that = this;
       postRequest('/user/ur/bindAll', data).then(function (res) {
         if (res.success) {

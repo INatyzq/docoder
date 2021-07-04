@@ -1,7 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.yangzq.docoder.user.mapper.SysUserMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.yangzq.docoder.user.entity.SysUser">
+        <id column="id" property="id" />
+        <result column="user_name" property="userName" />
+        <result column="user_pwd" property="userPwd" />
+        <result column="nickname" property="nickname" />
+        <result column="full_name" property="fullName" />
+        <result column="phone" property="phone" />
+        <result column="email" property="email" />
+        <result column="address" property="address" />
+        <result column="sex" property="sex" />
+        <result column="birthday" property="birthday" />
+        <result column="id_card" property="idCard" />
+        <result column="avatar_url" property="avatarUrl" />
+        <result column="status" property="status" />
+        <result column="created_by" property="createdBy" />
+        <result column="created_time" property="createdTime" />
+        <result column="updated_by" property="updatedBy" />
+        <result column="updated_time" property="updatedTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_name, user_pwd, nickname, full_name, phone, email, address, sex, birthday, id_card, avatar_url, status, created_by, created_time, updated_by, updated_time
+    </sql>
+
     <select id="selectDataPage" resultType="cn.yangzq.docoder.user.vo.SysUserVo">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        <trim prefix="where" prefixOverrides="and|or">
+            and status = 1
+            <if test="param.userName!=null and param.userName!=''">
+                and user_name like concat('%',#{param.userName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="param.nickname!=null and param.nickname!=''">
+                and nickname like concat('%',#{param.nickname,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="param.email!=null and param.email!=''">
+                and email like concat('%',#{param.email,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="param.phone!=null and param.phone!=''">
+                and phone like concat('%',#{param.phone,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="param.fullName!=null and param.fullName!=''">
+                and full_name like concat('%',#{param.fullName,jdbcType=VARCHAR},'%')
+            </if>
+        </trim>
     </select>
 
     <select id="selectRbacPage" resultType="cn.yangzq.docoder.user.vo.SysUserVo">
@@ -33,6 +80,7 @@
             and instr(concat(',',rp.permissionIds,','),concat(',',#{param.id,jdbcType=INTEGER},','))
         </if>
         <trim prefix="where" prefixOverrides="and|or">
+            and su.status=1
             <if test="param.searchVal!=null and param.searchVal!=''">
                 and (
                     su.user_name like concat('%',#{param.searchVal,jdbcType=VARCHAR},'%')
@@ -49,5 +97,37 @@
             rp.permissionIds desc,
         </if>
         su.created_time
+    </select>
+
+    <resultMap id="userDetailMap" type="cn.yangzq.docoder.user.vo.UserDetailVO">
+        <result column="id" property="id"/>
+        <association property="feature" javaType="cn.yangzq.docoder.user.vo.UserFeatureVo" column="id" select="selectUserFeatureByUserId"/>
+        <collection property="permissionList" ofType="cn.yangzq.docoder.user.vo.SysPermissionVo" column="id" select="selectPermissionListByUserId"/>
+    </resultMap>
+    <select id="selectUserDetail" resultMap="userDetailMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        where id = #{userId,jdbcType=INTEGER} or user_name = #{userName,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectPermissionListByUserId" parameterType="integer" resultType="cn.yangzq.docoder.user.vo.SysPermissionVo">
+        SELECT
+            sp.id, parent_id, permission_name, permission_type, permission_desc, resource_url, icon, order_num, sp.status
+        FROM user_role ur
+        inner join sys_role sr
+        on ur.role_id = sr.id and ur.status = 1
+        inner join role_permission rp
+        on sr.id = rp.role_id
+        inner join sys_permission sp
+        on rp.permission_id = sp.id and sp.status = 1
+        where ur.user_id = #{userId}
+    </select>
+
+    <select id="selectUserFeatureByUserId" parameterType="integer" resultType="cn.yangzq.docoder.user.vo.UserFeatureVo">
+        SELECT
+            <include refid="cn.yangzq.docoder.user.mapper.UserFeatureMapper.Base_Column_List"/>
+        FROM user_feature
+        where user_id = #{userId}
     </select>
 </mapper>

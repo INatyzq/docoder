@@ -6,9 +6,12 @@ import cn.yangzq.docoder.user.form.UserRegisterForm;
 import cn.yangzq.docoder.user.param.RbacParam;
 import cn.yangzq.docoder.user.vo.SysPermissionVo;
 import cn.yangzq.docoder.user.vo.SysUserVo;
-import cn.yangzq.docoder.user.vo.UserDetailVO;
+import cn.yangzq.docoder.user.vo.UserAuthDetailVO;
 import cn.yangzq.docoder.common.mybatis.utils.Pageable;
+import cn.yangzq.docoder.user.vo.UserDetailVO;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
 *@author yangzq
@@ -28,22 +31,36 @@ public interface SysUserService extends IService<SysUser> {
      * @param form
      * @return
      */
-    UserDetailVO login(UserLoginForm form);
+    UserAuthDetailVO login(UserLoginForm form);
+
+    /**
+     * 获取用户详情
+     * @param userId
+     * @return
+     */
+    UserDetailVO getUserDetail(Integer userId);
+
+    /**
+     * 获取用户详情
+     * @param userName
+     * @return
+     */
+    UserDetailVO getUserDetail(String userName);
 
     /**
      * 获取用户分页列表
-     * @param user
+     * @param param
      * @param page
      * @return
      */
-    Pageable<SysUser> getUserPage(SysUser user, Pageable<SysUser> page);
+    Pageable<SysUserVo> getUserPage(SysUserVo param, Pageable<SysUserVo> page);
 
     /**
      * 刷新
      * @param id
      * @return
      */
-    UserDetailVO refresh(Integer id);
+    UserAuthDetailVO refresh(Integer id);
 
     /**
      * 基于rbac的分页查询
@@ -52,4 +69,11 @@ public interface SysUserService extends IService<SysUser> {
      * @return
      */
     Pageable<SysUserVo> getRbacPage(RbacParam param, Pageable<SysPermissionVo> page);
+
+    /**
+     * 批量更新用户状态
+     * @param ids
+     * @param status
+     */
+    void updateStatus(List<Integer> ids,Integer status);
 }

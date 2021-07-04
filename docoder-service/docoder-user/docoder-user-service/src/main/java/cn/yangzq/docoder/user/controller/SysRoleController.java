@@ -41,6 +41,15 @@ public class SysRoleController {
         return ResultVo.success(roleService.getPage(param,page));
     }
 
+    @ApiOperation("单条新增或修改")
+    @PostMapping("/saveOrUpdate")
+    public ResultVo<Object> saveOrUpdate(@RequestBody SysRoleForm form){
+        SysRole role = formToPoMapper.roleForm(form);
+        roleService.saveOrUpdate(role);
+        return ResultVo.success();
+    }
+
+    @ApiOperation("批量新增或修改")
     @PostMapping("/saveOrUpdateBatch")
     public ResultVo<Object> saveOrUpdate(@RequestBody List<SysRoleForm> forms){
         List<SysRole> roles = formToPoMapper.roleListForm(forms);
@@ -49,7 +58,7 @@ public class SysRoleController {
     }
 
     @ApiOperation("批量删除")
-    @PostMapping("/deleteBatch")
+    @PostMapping("/deleteByIds")
     public ResultVo<Object> deleteBatch(@RequestBody List<Integer> ids){
         Assert.isFalse(CollectionUtil.isEmpty(ids),"集合不能为空！");
         roleService.removeByIds(ids);

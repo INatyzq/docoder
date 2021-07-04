@@ -25,5 +25,7 @@ public interface FormToPoMapper {
 
     List<SysRole> roleListForm(List<SysRoleForm> form);
 
+    SysRole roleForm(SysRoleForm form);
+
     SysPermission sysPermissionForm(SysPermissionForm form);
 }

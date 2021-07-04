@@ -1,15 +1,14 @@
 package cn.yangzq.docoder.user.controller;
 
 
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.yangzq.docoder.base.api.ISysAttachmentService;
-import cn.yangzq.docoder.base.entity.po.SysAttachment;
-import cn.yangzq.docoder.user.entity.SysPermission;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.SecureUtil;
 import cn.yangzq.docoder.user.entity.SysUser;
 import cn.yangzq.docoder.user.form.AvatarForm;
+import cn.yangzq.docoder.user.maputil.PoToVoMapper;
 import cn.yangzq.docoder.user.param.RbacParam;
 import cn.yangzq.docoder.user.service.SysUserService;
 import cn.yangzq.docoder.common.core.utils.ResultVo;
@@ -18,6 +17,7 @@ import cn.yangzq.docoder.user.common.FilePath;
 import cn.yangzq.docoder.user.config.DocoderConfig;
 import cn.yangzq.docoder.user.vo.SysPermissionVo;
 import cn.yangzq.docoder.user.vo.SysUserVo;
+import cn.yangzq.docoder.user.vo.UserDetailVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,24 +45,57 @@ public class SysUserController {
     private SysUserService userService;
     @Autowired
     private DocoderConfig docoderConfig;
+    @Autowired
+    private PoToVoMapper poToVoMapper;
 
     @ApiOperation("用户分页列表")
     @GetMapping("/listPage")
-    public ResultVo<Pageable<SysUser>> getUserPage(SysUser user, Pageable<SysUser> page){
-        return ResultVo.success(userService.getUserPage(user,page));
+    public ResultVo<Pageable<SysUserVo>> getUserPage(SysUserVo param, Pageable<SysUserVo> page){
+        return ResultVo.success(userService.getUserPage(param,page));
     }
 
     @ApiOperation("修改用户信息")
     @PostMapping("/user")
-    public ResultVo<SysUser> update(@RequestBody SysUser user){
+    public ResultVo<SysUserVo> update(@RequestBody SysUser user){
+        String userPwd = user.getUserPwd();
+        if(StrUtil.isNotBlank(userPwd)){
+            user.setUserPwd(SecureUtil.md5(userPwd));
+        }
         userService.updateById(user);
+        return ResultVo.success();
+    }
+
+    @ApiOperation("批量启用用户")
+    @PostMapping("/ableByIds")
+    public ResultVo<Object> ableByIds(@RequestBody List<Integer> ids){
+        userService.updateStatus(ids,1);
+        return ResultVo.success();
+    }
+
+    @ApiOperation("批量禁用用户")
+    @PostMapping("/disableByIds")
+    public ResultVo<Object> disableByIds(@RequestBody List<Integer> ids){
+        userService.updateStatus(ids,2);
+        return ResultVo.success();
+    }
+
+    @ApiOperation("批量删除用户")
+    @PostMapping("/deleteByIds")
+    public ResultVo<Object> deleteByIds(@RequestBody List<Integer> ids){
+        userService.updateStatus(ids,-1);
         return ResultVo.success();
     }
 
     @ApiOperation("通过ID获取用户详情")
     @GetMapping("/{id}")
-    public ResultVo<SysUser> getDetail(@PathVariable("id") Integer id){
-        return ResultVo.success(userService.getById(id));
+    public ResultVo<SysUserVo> getUser(@PathVariable("id") Integer id){
+        return ResultVo.success(poToVoMapper.userVo(userService.getById(id)));
+    }
+
+    @ApiOperation("通过ID获取用户详情")
+    @GetMapping("/getUserDetail/{id}")
+    public ResultVo<UserDetailVO> getUserDetail(@PathVariable("id") Integer id){
+        return ResultVo.success(userService.getUserDetail(id));
     }
 
     @ApiOperation("更新用户头像")

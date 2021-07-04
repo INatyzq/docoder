@@ -73,6 +73,7 @@ public class SecurityAuthenticator extends IAuthentication {
     public List<String> webIgnoring() {
         List<String> ignoreList = new ArrayList<>();
         ignoreList.add("/user/showAvatar");
+        ignoreList.add("/user/registerPrepare");
         return ignoreList;
     }
 }
