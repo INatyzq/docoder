@@ -44,7 +44,7 @@ const router = new Router({
         {
           path: 'home/system/permission',
           name: 'home-system-permission',
-          component: () => import('@/views/home/system/permission/PermissionManage.vue'),
+          component: () => import('@/views/system/system/permission/PermissionManage.vue'),
           meta: {
             breadcrumb: [
               {title: '主页'},
@@ -58,7 +58,7 @@ const router = new Router({
         {
           path: 'home/system/role',
           name: 'home-system-role',
-          component: () => import('@/views/home/system/role/RoleManage.vue'),
+          component: () => import('@/views/system/system/role/RoleManage.vue'),
           meta: {
             breadcrumb: [
               {title: '主页'},
@@ -72,7 +72,7 @@ const router = new Router({
         {
           path: 'home/system/user/user-list',
           name: 'home-system-user-user-list',
-          component: () => import('@/views/home/system/user/user-list/UserList.vue'),
+          component: () => import('@/views/system/system/user/user-list/UserList.vue'),
           meta: {
             breadcrumb: [
               {title: '主页'},
@@ -85,7 +85,7 @@ const router = new Router({
         {
           path: 'home/system/permission-config',
           name: 'home-system-user-permission-config',
-          component: () => import('@/views/home/system/permission/config/PermissionConfig'),
+          component: () => import('@/views/system/system/permission/config/PermissionConfig'),
           meta: {
             breadcrumb: [
               {title: '主页'},
@@ -98,7 +98,7 @@ const router = new Router({
         {
           path: 'home/system/user/user-view',
           name: 'home-system-user-user-view',
-          component: () => import('@/views/home/system/user/UserView.vue'),
+          component: () => import('@/views/system/system/user/UserView.vue'),
           meta: {
             breadcrumb: [
               {title: '主页'},
@@ -111,7 +111,7 @@ const router = new Router({
         {
           path: 'home/system/user/user-edit/:userId',
           name: 'home-system-user-user-edit',
-          component: () => import('@/views/home/system/user/user-edit/UserEdit.vue'),
+          component: () => import('@/views/system/system/user/user-edit/UserEdit.vue'),
           meta: {
             breadcrumb: [
               {title: '主页'},
@@ -126,16 +126,59 @@ const router = new Router({
         // 账户设置
         // =============================================================================
         {
-          path: 'home/account',
-          name: 'home-account',
-          component: () => import('@/views/home/account/UserView.vue'),
+          path: 'home/system/account',
+          name: 'home-system-account',
+          component: () => import('@/views/system/account/UserView.vue'),
           meta: {
             breadcrumb: [
               {title: '主页'},
               {title: '账户设置'},
               {title: '我的账户', active: true}
             ],
-            pageTitle: '用户详情'
+            pageTitle: '我的账户'
+          }
+        },
+
+        // =============================================================================
+        // 内容
+        // =============================================================================
+        {
+          path: 'home/content/notes/dir-setting',
+          name: 'home-content-notes-dir-setting',
+          component: () => import('@/views/content/notes/NoteDirSetting.vue'),
+          meta: {
+            breadcrumb: [
+              {title: '主页'},
+              {title: '笔记'},
+              {title: '目录设置', active: true}
+            ],
+            pageTitle: '目录设置'
+          }
+        },
+        {
+          path: 'home/content/notes/edit',
+          name: 'home-content-notes-edit',
+          component: () => import('@/views/content/notes/NoteEdit.vue'),
+          meta: {
+            breadcrumb: [
+              {title: '主页'},
+              {title: '笔记'},
+              {title: '写笔记', active: true}
+            ],
+            pageTitle: '写笔记'
+          }
+        },
+        {
+          path: 'home/content/notes/view-board',
+          name: 'home-content-notes-view-board',
+          component: () => import('@/views/content/notes/NoteViewBoard.vue'),
+          meta: {
+            breadcrumb: [
+              {title: '主页'},
+              {title: '笔记'},
+              {title: '笔记看板', active: true}
+            ],
+            pageTitle: '笔记看板'
           }
         },
 
