@@ -32,13 +32,13 @@ import java.util.List;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private AuthenticationProvider authenticationProvider;
     private UnauthorizedEntryPoint unauthorizedEntryPoint;
+    private AuthenticationProvider authenticationProvider;
 
     @Autowired
-    public WebSecurityConfig(AuthenticationProvider authenticationProvider,UnauthorizedEntryPoint unauthorizedEntryPoint) {
-        this.authenticationProvider = authenticationProvider;
+    public WebSecurityConfig(AuthenticationProvider authenticationProvider, UnauthorizedEntryPoint unauthorizedEntryPoint) {
         this.unauthorizedEntryPoint = unauthorizedEntryPoint;
+        this.authenticationProvider = authenticationProvider;
     }
 
     /**
@@ -58,8 +58,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and().authorizeRequests()
             //对preflight放行
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll().and()
+                //.addFilter(new CorsWrapperFilter(corsConfigurationSource()))
             // 除上面外的所有请求全部需要鉴权认证
-            .addFilter(new TokenAuthenticationFilter(authenticationManager(),authenticationProvider, unauthorizedEntryPoint)).httpBasic();
+            .addFilter(new TokenAuthenticationFilter(authenticationManager(), authenticationProvider,unauthorizedEntryPoint)).httpBasic();
     }
 
     /**

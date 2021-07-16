@@ -5,8 +5,6 @@ import cn.yangzq.docoder.common.security.security.UnauthorizedEntryPoint;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -22,11 +20,11 @@ import java.io.IOException;
 @Slf4j
 public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
 
-    private AuthenticationProvider authenticationProvider;
-
     private UnauthorizedEntryPoint unauthorizedEntryPoint;
 
-    public TokenAuthenticationFilter(AuthenticationManager authManager,AuthenticationProvider authenticationProvider, UnauthorizedEntryPoint unauthorizedEntryPoint) {
+    private AuthenticationProvider authenticationProvider;
+
+    public TokenAuthenticationFilter(AuthenticationManager authManager,AuthenticationProvider authenticationProvider,UnauthorizedEntryPoint unauthorizedEntryPoint) {
         super(authManager);
         this.authenticationProvider = authenticationProvider;
         this.unauthorizedEntryPoint = unauthorizedEntryPoint;
@@ -35,6 +33,7 @@ public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws IOException, ServletException {
+
         boolean isDispatcher = false;
         try {
             isDispatcher = authenticationProvider.authentication(req,res);
@@ -43,9 +42,6 @@ public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
             return;
         }
 
-        /*if (authentication != null) {
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        }*/
         if(!isDispatcher){
             chain.doFilter(req, res);
         }
