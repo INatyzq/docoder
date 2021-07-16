@@ -1,4 +1,4 @@
-package cn.yangzq.docoder.user.vo;
+package cn.yangzq.docoder.user.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,15 +9,14 @@ import java.io.Serializable;
 
 /**
  * @author yangzq
- * @description 系统权限VO
+ * @description 系统权限
  **/
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "SysPermission对象", description = "系统权限VO")
-public class SysPermissionVo implements Serializable {
+@ApiModel(value = "PermissionDetail", description = "系统权限")
+public class PermissionDetail implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
+    private static final long serialVersionUID = -26324801012879635L;
     @ApiModelProperty(value = "主键id")
     private Integer id;
 

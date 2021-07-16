@@ -1,13 +1,7 @@
 package cn.yangzq.docoder.common.mybatis.utils;
 
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
 *@author yangzq

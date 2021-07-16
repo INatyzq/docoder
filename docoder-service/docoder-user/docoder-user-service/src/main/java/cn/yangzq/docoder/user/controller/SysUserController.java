@@ -15,7 +15,7 @@ import cn.yangzq.docoder.common.core.utils.ResultVo;
 import cn.yangzq.docoder.common.mybatis.utils.Pageable;
 import cn.yangzq.docoder.user.common.FilePath;
 import cn.yangzq.docoder.user.config.DocoderConfig;
-import cn.yangzq.docoder.user.vo.SysPermissionVo;
+import cn.yangzq.docoder.user.entity.PermissionDetail;
 import cn.yangzq.docoder.user.vo.SysUserVo;
 import cn.yangzq.docoder.user.vo.UserDetailVO;
 import io.swagger.annotations.Api;
@@ -29,7 +29,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -143,7 +142,7 @@ public class SysUserController {
 
     @ApiOperation("基于rbac的分页查询")
     @GetMapping("/rbacPage")
-    public ResultVo<Pageable<SysUserVo>> getRbacPage(RbacParam param, Pageable<SysPermissionVo> page){
+    public ResultVo<Pageable<SysUserVo>> getRbacPage(RbacParam param, Pageable<PermissionDetail> page){
         return ResultVo.success(userService.getRbacPage(param,page));
     }
 }

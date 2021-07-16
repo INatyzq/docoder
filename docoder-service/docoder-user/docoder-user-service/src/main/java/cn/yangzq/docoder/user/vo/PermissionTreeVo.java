@@ -26,11 +26,23 @@ public class PermissionTreeVo implements Serializable {
     @ApiModelProperty("父id")
     private Integer parentId;
 
-    @ApiModelProperty("节点名称")
-    private String title;
+    @ApiModelProperty(value = "权限名称")
+    private String permissionName;
 
-    @ApiModelProperty("节点图标")
+    @ApiModelProperty(value = "权限类型;1:菜单,2:按钮")
+    private String permissionType;
+
+    @ApiModelProperty(value = "权限描述")
+    private String permissionDesc;
+
+    @ApiModelProperty(value = "权限资源url")
+    private String resourceUrl;
+
+    @ApiModelProperty(value = "图标")
     private String icon;
+
+    @ApiModelProperty(value = "排序序号")
+    private Integer orderNum;
 
     @ApiModelProperty("是否展开")
     private boolean expanded = true;

@@ -52,7 +52,7 @@ public class CustomDateConverter implements Converter<String,Date> {
         } else if (source.matches("^\\d{4}/\\d{1,2}/\\d{1,2} {1}\\d{1,2}:\\d{1,2}:\\d{1,2}$")) {
             return parseDate(source, formarts.get(7));
         } else {
-            throw new IllegalArgumentException("Invalid boolean value '" + source + "'");
+            throw new ArgumentException("Invalid boolean value '" + source + "'");
         }
     }
 

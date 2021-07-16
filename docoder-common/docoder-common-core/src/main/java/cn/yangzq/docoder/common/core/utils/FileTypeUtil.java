@@ -3,8 +3,7 @@ package cn.yangzq.docoder.common.core.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Set;
 
 /**
 *@author yangzq
@@ -14,7 +13,7 @@ public class FileTypeUtil {
 
     private FileTypeUtil(){}
 
-    public static synchronized String getType(InputStream is){
+    public static Set<String> getType(InputStream is){
         byte[] data = new byte[0];
         try {
             data = new byte[is.available()];
@@ -27,7 +26,7 @@ public class FileTypeUtil {
         FileType[] types = FileType.values();
         for(FileType type:types){
             if(magicNumberHex.contains(type.getValue())){
-                return type.getCategory();
+                return type.getCategorySet();
             }
         }
         return null;

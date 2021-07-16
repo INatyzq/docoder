@@ -2,19 +2,17 @@ package cn.yangzq.docoder.common.core.utils;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.yangzq.docoder.common.core.exception.SystemException;
 import cn.yangzq.docoder.common.core.enums.UploadStatus;
+import cn.yangzq.docoder.common.core.exception.SystemException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -67,7 +65,7 @@ public class FTPUtil {
             path = ftp.printWorkingDirectory();
         } catch (IOException e) {
             log.error(this.getClass().getSimpleName(),e);
-            throw new SystemException(e);
+            throw new SystemException("FTP异常：upload");
         }finally {
             //关闭相关资源
             if (ftp!=null && ftp.isConnected()) {
@@ -84,7 +82,7 @@ public class FTPUtil {
     /**
      * 文件断点续传
      */
-    public UploadStatus breakpointUpload(String local, String remoteDir,String asFilename) {
+    public UploadStatus breakpointUpload(String local, String remoteDir, String asFilename) {
         FTPClient ftp = null;
         try {
             //设置PassiveMode传输
@@ -133,7 +131,7 @@ public class FTPUtil {
             return result;
         } catch (IOException e) {
             log.error(this.getClass().getSimpleName(),e);
-            throw new SystemException(e);
+            throw new SystemException("FTP断点异常：upload");
         }finally {
             //关闭相关资源
             if (ftp!=null && ftp.isConnected()) {
@@ -141,7 +139,7 @@ public class FTPUtil {
                     closeResource(ftp);
                 } catch (IOException ioe) {
                     log.error(this.getClass().getSimpleName(),ioe);
-                    throw new SystemException(ioe);
+                    throw new SystemException("FTP异常：close");
                 }
             }
         }
@@ -212,7 +210,7 @@ public class FTPUtil {
             return true;
         } catch (IOException e) {
             log.error(this.getClass().getSimpleName(),e);
-            throw new SystemException(e);
+            throw new SystemException("FTP异常：delete");
         }finally {
             //关闭相关资源
             if (ftp!=null && ftp.isConnected()) {
@@ -220,7 +218,7 @@ public class FTPUtil {
                     closeResource(ftp);
                 } catch (IOException ioe) {
                     log.error(this.getClass().getSimpleName(),ioe);
-                    throw new SystemException(ioe);
+                    throw new SystemException("FTP异常：close");
                 }
             }
         }
@@ -252,7 +250,7 @@ public class FTPUtil {
             return true;
         } catch (IOException e) {
             log.error(this.getClass().getSimpleName(),e);
-            throw new SystemException(e);
+            throw new SystemException("FTP异常：deleteBatch");
         }finally {
             //关闭相关资源
             if (ftp!=null && ftp.isConnected()) {

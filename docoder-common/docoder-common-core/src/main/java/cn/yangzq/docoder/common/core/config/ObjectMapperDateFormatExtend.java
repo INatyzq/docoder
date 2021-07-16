@@ -40,7 +40,7 @@ public class ObjectMapperDateFormatExtend extends DateFormat {
 
     @Override
     public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition) {
-        return new StringBuffer(DateUtil.format(date,"yyyy-MM-dd"));
+        return new StringBuffer(DateUtil.format(date,"yyyy-MM-dd HH:mm:ss"));
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ObjectMapperDateFormatExtend extends DateFormat {
         } else if (source.matches("^\\d{4}/\\d{1,2}/\\d{1,2} {1}\\d{1,2}:\\d{1,2}:\\d{1,2}$")) {
             return parseDate(source, formarts.get(8),pos);
         } else {
-            throw new IllegalArgumentException("Invalid boolean value '" + source + "'");
+            throw new ArgumentException("Invalid boolean value '" + source + "'");
         }
     }
 

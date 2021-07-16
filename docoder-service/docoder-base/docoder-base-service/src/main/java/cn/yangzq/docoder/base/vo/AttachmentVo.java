@@ -1,4 +1,4 @@
-package cn.yangzq.docoder.base.entity.po;
+package cn.yangzq.docoder.base.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,12 +10,12 @@ import java.util.Date;
 
 /**
 *@author yangzq
-*@description 系统附件表
+*@description 系统附件VO
 */
-@ApiModel(value = "SysAttachment对象", description = "系统附件表")
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SysAttachment implements Serializable {
+@ApiModel(value = "SysAttachment对象", description = "系统附件VO")
+public class AttachmentVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -29,9 +29,12 @@ public class SysAttachment implements Serializable {
     private String fileName;
 
     @ApiModelProperty(value = "原文件名称")
-    private String originalName;
+    private String originalFileName;
 
-    @ApiModelProperty(value = "文件路劲")
+    @ApiModelProperty(value = "文件描述")
+    private String fileDesc;
+
+    @ApiModelProperty(value = "文件路径")
     private String filePath;
 
     @ApiModelProperty(value = "文件类型")
@@ -40,20 +43,6 @@ public class SysAttachment implements Serializable {
     @ApiModelProperty(value = "文件大小")
     private Double fileSize;
 
-    @ApiModelProperty(value = "状态")
-    private Integer status;
-
-    @ApiModelProperty(value = "创建人")
-    private Integer createdBy;
-
-    @ApiModelProperty(value = "创建时间")
-    private Date createdTime;
-
-    @ApiModelProperty(value = "修改人")
-    private Integer updatedBy;
-
-    @ApiModelProperty(value = "修改时间")
-    private Date updatedTime;
-
-
+    @ApiModelProperty(value = "httpUrl")
+    private String httpUrl;
 }

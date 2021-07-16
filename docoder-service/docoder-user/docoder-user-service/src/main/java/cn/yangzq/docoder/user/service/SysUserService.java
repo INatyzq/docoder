@@ -1,10 +1,10 @@
 package cn.yangzq.docoder.user.service;
 
+import cn.yangzq.docoder.user.entity.PermissionDetail;
 import cn.yangzq.docoder.user.entity.SysUser;
 import cn.yangzq.docoder.user.form.UserLoginForm;
 import cn.yangzq.docoder.user.form.UserRegisterForm;
 import cn.yangzq.docoder.user.param.RbacParam;
-import cn.yangzq.docoder.user.vo.SysPermissionVo;
 import cn.yangzq.docoder.user.vo.SysUserVo;
 import cn.yangzq.docoder.user.vo.UserAuthDetailVO;
 import cn.yangzq.docoder.common.mybatis.utils.Pageable;
@@ -68,7 +68,7 @@ public interface SysUserService extends IService<SysUser> {
      * @param page
      * @return
      */
-    Pageable<SysUserVo> getRbacPage(RbacParam param, Pageable<SysPermissionVo> page);
+    Pageable<SysUserVo> getRbacPage(RbacParam param, Pageable<PermissionDetail> page);
 
     /**
      * 批量更新用户状态

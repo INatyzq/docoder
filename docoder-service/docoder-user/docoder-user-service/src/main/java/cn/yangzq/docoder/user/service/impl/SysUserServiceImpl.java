@@ -10,7 +10,7 @@ import cn.yangzq.docoder.user.form.UserRegisterForm;
 import cn.yangzq.docoder.user.maputil.VoToVoMapper;
 import cn.yangzq.docoder.user.param.RbacParam;
 import cn.yangzq.docoder.user.service.SysUserService;
-import cn.yangzq.docoder.user.vo.SysPermissionVo;
+import cn.yangzq.docoder.user.entity.PermissionDetail;
 import cn.yangzq.docoder.user.vo.SysUserVo;
 import cn.yangzq.docoder.user.vo.UserAuthDetailVO;
 import cn.yangzq.docoder.common.core.exception.AuthException;
@@ -146,7 +146,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public Pageable<SysUserVo> getRbacPage(RbacParam param, Pageable<SysPermissionVo> page) {
+    public Pageable<SysUserVo> getRbacPage(RbacParam param, Pageable<PermissionDetail> page) {
         return userMapper.selectRbacPage(param,page);
     }
 

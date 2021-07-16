@@ -1,5 +1,6 @@
 package cn.yangzq.docoder.user.vo;
 
+import cn.yangzq.docoder.user.entity.PermissionDetail;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -20,7 +21,7 @@ public class UserDetailVO extends SysUserVo implements Serializable {
     private static final long serialVersionUID = -1434300466895349995L;
 
     @ApiModelProperty("用户权限")
-    private List<SysPermissionVo> permissionList;
+    private List<PermissionDetail> permissionList;
 
     @ApiModelProperty("用户特性")
     private UserFeatureVo feature;

@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -35,9 +36,12 @@ public class SysAttachment implements Serializable {
     private String fileName;
 
     @ApiModelProperty(value = "原文件名称")
-    private String originalName;
+    private String originalFileName;
 
-    @ApiModelProperty(value = "文件路劲")
+    @ApiModelProperty(value = "文件描述")
+    private String fileDesc;
+
+    @ApiModelProperty(value = "文件路径")
     private String filePath;
 
     @ApiModelProperty(value = "文件类型")
@@ -46,7 +50,11 @@ public class SysAttachment implements Serializable {
     @ApiModelProperty(value = "文件大小")
     private Double fileSize;
 
+    @ApiModelProperty(value = "httpUrl")
+    private String httpUrl;
+
     @ApiModelProperty(value = "状态")
+    @TableLogic
     private Integer status;
 
     @ApiModelProperty(value = "创建人")

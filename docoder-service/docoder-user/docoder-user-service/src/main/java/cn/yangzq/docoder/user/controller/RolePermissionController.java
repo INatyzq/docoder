@@ -2,7 +2,7 @@ package cn.yangzq.docoder.user.controller;
 
 
 import cn.yangzq.docoder.common.core.utils.ResultVo;
-import cn.yangzq.docoder.user.form.UserRoleForm;
+import cn.yangzq.docoder.user.form.RbacForm;
 import cn.yangzq.docoder.user.service.RolePermissionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,7 +29,7 @@ public class RolePermissionController {
 
     @ApiOperation("批量绑定角色和权限的关系")
     @PostMapping("/bindBatch")
-    public ResultVo<Object> bindBatch(@RequestBody List<UserRoleForm> forms){
+    public ResultVo<Object> bindBatch(@RequestBody List<RbacForm> forms){
         rolePermissionService.bindBatch(forms);
         return ResultVo.success();
     }

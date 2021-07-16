@@ -11,5 +11,11 @@
 
     <artifactId>docoder-user-api</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>cn.yangzq</groupId>
+            <artifactId>docoder-common-swagger</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>

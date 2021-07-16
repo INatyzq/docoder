@@ -19,6 +19,7 @@
     <modules>
         <module>docoder-code-generator</module>
         <module>docoder-common</module>
+        <module>docoder-gateway</module>
         <module>docoder-infrastructure</module>
         <module>docoder-service</module>
     </modules>
@@ -31,20 +32,23 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot.version>2.3.6.RELEASE</spring-boot.version>
         <spring-cloud.version>Hoxton.SR9</spring-cloud.version>
+        <spring-cloud-gateway.version>2.2.6.RELEASE</spring-cloud-gateway.version>
         <cloud-alibaba.version>2.2.3.RELEASE</cloud-alibaba.version>
         <mybatis-plus.version>3.4.1</mybatis-plus.version>
         <druid.version>1.1.16</druid.version>
         <velocity.version>2.0</velocity.version>
-        <mssql-jdbc.version>8.4.0.jre8</mssql-jdbc.version>
+        <ok-http.version>4.9.0</ok-http.version>
         <feign-okhttp.version>11.0</feign-okhttp.version>
         <guava.version>29.0-jre</guava.version>
         <hutool.version>5.5.1</hutool.version>
+        <poi.version>4.1.2</poi.version>
         <jwt.version>3.10.0</jwt.version>
         <mapstruct.version>1.3.0.Final</mapstruct.version>
         <lombok.version>1.18.10</lombok.version>
         <easy-captcha.version>1.6.2</easy-captcha.version>
         <commons-net.version>3.6</commons-net.version>
         <swagger.fox.version>2.9.2</swagger.fox.version>
+        <swagger-models.version>1.5.21</swagger-models.version>
         <swagger-bootstrap.version>1.9.6</swagger-bootstrap.version>
     </properties>
 

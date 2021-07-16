@@ -35,10 +35,6 @@ public class RolePermission implements Serializable {
     @ApiModelProperty(value = "权限id")
     private Integer permissionId;
 
-    @ApiModelProperty(value = "数据标识,0:无效,1:有效")
-    @TableLogic
-    private String dataFlag;
-
     @ApiModelProperty(value = "创建者")
     private Integer createdBy;
 

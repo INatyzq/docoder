@@ -6,7 +6,7 @@ import cn.yangzq.docoder.user.vo.PermissionTreeVo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 /**
 *@author yangzq
@@ -16,7 +16,7 @@ public interface SysPermissionMapper extends BaseMapper<SysPermission> {
 
     List<SysPermission> selectUserPermissionList(Integer userId);
 
-    Set<String> selectRbac(RbacParam param);
+    List<Map<String,String>> selectRbac(RbacParam param);
 
     List<PermissionTreeVo> selectTreeNode();
 }

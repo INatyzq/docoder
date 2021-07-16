@@ -3,7 +3,7 @@ package cn.yangzq.docoder.user.maputil;
 import cn.yangzq.docoder.user.entity.SysPermission;
 import cn.yangzq.docoder.user.entity.SysRole;
 import cn.yangzq.docoder.user.entity.SysUser;
-import cn.yangzq.docoder.user.vo.SysPermissionVo;
+import cn.yangzq.docoder.user.entity.PermissionDetail;
 import cn.yangzq.docoder.user.vo.SysRoleVo;
 import cn.yangzq.docoder.user.vo.SysUserVo;
 import cn.yangzq.docoder.user.vo.UserAuthDetailVO;
@@ -18,7 +18,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface PoToVoMapper {
 
-    List<SysPermissionVo> permissionList(List<SysPermission> permissions);
+    List<PermissionDetail> permissionList(List<SysPermission> permissions);
 
     UserAuthDetailVO UserAuthDetailVO(SysUser sysUser);
 

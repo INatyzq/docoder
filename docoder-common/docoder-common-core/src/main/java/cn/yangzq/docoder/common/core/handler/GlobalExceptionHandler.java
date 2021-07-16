@@ -1,7 +1,6 @@
 package cn.yangzq.docoder.common.core.handler;
 
 import cn.hutool.json.JSONUtil;
-import cn.yangzq.docoder.common.core.exception.AuthException;
 import cn.yangzq.docoder.common.core.exception.BasicException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,12 +14,12 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import cn.yangzq.docoder.common.core.utils.ResultVo;
 
 /**
  * @author yangzq
@@ -33,7 +32,7 @@ public class GlobalExceptionHandler {
 
 
     /*@RequestMapping(value = {"/error"})
-    public ResultVO error(HttpServletRequest request, Exception exception, HttpServletResponse response){
+    public ExceptionEntity error(HttpServletRequest request, Exception exception, HttpServletResponse response){
         printStackTrace(exception);
         return commonHandler(request, response,
                 exception.getClass().getSimpleName(),
@@ -46,65 +45,79 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResultVo errorHandler(HttpServletRequest request, NoHandlerFoundException exception, HttpServletResponse response) {
-        printStackTrace(exception);
+    public ExceptionEntity noHandlerFoundExceptionHandler(HttpServletRequest request, NoHandlerFoundException exception, HttpServletResponse response) {
+        printStackTrace(request, exception);
         return commonHandler(request, response,
                 exception.getClass().getSimpleName(),
                 HttpStatus.NOT_FOUND.value(),
-                exception.getMessage());
+                exception.getMessage(), exception);
     }
 
     /**
      * 405异常处理
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResultVo errorHandler(HttpServletRequest request, HttpRequestMethodNotSupportedException exception, HttpServletResponse response) {
-        printStackTrace(exception);
+    public ExceptionEntity httpRequestMethodNotSupportedExceptionHandler(HttpServletRequest request, HttpRequestMethodNotSupportedException exception, HttpServletResponse response) {
+        printStackTrace(request, exception);
         return commonHandler(request, response,
                 exception.getClass().getSimpleName(),
                 HttpStatus.METHOD_NOT_ALLOWED.value(),
-                exception.getMessage());
+                exception.getMessage(), exception);
     }
 
     /**
      * 415异常处理
      */
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-    public ResultVo errorHandler(HttpServletRequest request, HttpMediaTypeNotSupportedException exception, HttpServletResponse response) {
-        printStackTrace(exception);
+    public ExceptionEntity httpMediaTypeNotSupportedExceptionHandler(HttpServletRequest request, HttpMediaTypeNotSupportedException exception, HttpServletResponse response) {
+        printStackTrace(request, exception);
         return commonHandler(request, response,
                 exception.getClass().getSimpleName(),
                 HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(),
-                exception.getMessage());
+                exception.getMessage(), exception);
     }
 
     /**
      * 500异常处理
      */
     @ExceptionHandler(value = Exception.class)
-    public ResultVo errorHandler(HttpServletRequest request, Exception exception, HttpServletResponse response) {
-        printStackTrace(exception);
-        int code = HttpStatus.UNSUPPORTED_MEDIA_TYPE.value();
-        if (exception instanceof AuthException) {
-            code = ((AuthException) exception).getCode();
-        }
+    public ExceptionEntity exceptionHandler(HttpServletRequest request, Exception exception, HttpServletResponse response) {
+        printStackTrace(request, exception);
         return commonHandler(request, response,
                 exception.getClass().getSimpleName(),
-                code,
-                exception.getMessage());
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                exception.getMessage(), exception);
     }
 
     /**
      * 业务异常处理
      */
     @ExceptionHandler(value = BasicException.class)
-    private ResultVo errorHandler(HttpServletRequest request, BasicException exception, HttpServletResponse response) {
-        printStackTrace(exception);
-        ResultVo errorEntity = ResultVo.failed()
-                .message(exception.getMessage())
-                .code(exception.getCode())
-                .isHandle(exception.isHandle());
-        return determineOutput(request, response, errorEntity);
+    private ExceptionEntity basicExceptionHandler(HttpServletRequest request, BasicException exception, HttpServletResponse response) {
+        printStackTrace(request, exception);
+        return commonHandler(request, response,
+                exception.getClass().getSimpleName(),
+                exception.getCode(),
+                exception.getMessage(), exception);
+    }
+
+    /**
+     * 表单验证异常处理
+     */
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    @ResponseBody
+    public ExceptionEntity methodArgumentNotValidHandler(MethodArgumentNotValidException exception, HttpServletRequest request, HttpServletResponse response) {
+        List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
+        Map<String, String> errors = new HashMap<>();
+        for (FieldError error : fieldErrors) {
+            errors.put(error.getField(), error.getDefaultMessage());
+        }
+        String msg = JSONUtil.toJsonStr(errors);
+        printExceptionMsg(request, exception.getClass().getSimpleName(), msg);
+        return commonHandler(request, response,
+                exception.getClass().getSimpleName(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                msg, exception);
     }
 
     /**
@@ -112,54 +125,51 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = BindException.class)
     @ResponseBody
-    public ResultVo validExceptionHandler(BindException exception, HttpServletRequest request, HttpServletResponse response) {
-        printStackTrace(exception);
+    public ExceptionEntity bindExceptionHandler(BindException exception, HttpServletRequest request, HttpServletResponse response) {
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : fieldErrors) {
             errors.put(error.getField(), error.getDefaultMessage());
         }
-        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        return ResultVo.failed().message(JSONUtil.toJsonStr(errors));
-    }
-
-    /**
-     * 表单验证异常处理
-     */
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResultVo methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException exception, HttpServletRequest request, HttpServletResponse response) {
-        printStackTrace(exception);
-        List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
-        Map<String, String> errors = new HashMap<>();
-        for (FieldError error : fieldErrors) {
-            errors.put(error.getField(), error.getDefaultMessage());
-        }
-        ResultVo<Object> result = ResultVo.failed().message(JSONUtil.toJsonStr(errors)).isHandle(true);
-        return determineOutput(request, response, result);
+        String msg = JSONUtil.toJsonStr(errors);
+        printExceptionMsg(request, exception.getClass().getSimpleName(), msg);
+        return commonHandler(request, response,
+                exception.getClass().getSimpleName(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                msg, exception);
     }
 
     /**
      * 统一异常消息处理
      */
-    private ResultVo commonHandler(HttpServletRequest request, HttpServletResponse response,
-                                   String error, int httpCode, String message) {
-        ResultVo errorEntity = ResultVo.failed()
+    private ExceptionEntity commonHandler(HttpServletRequest request, HttpServletResponse response,
+                                          String error, int httpCode, String message, Exception e) {
+
+        if (!(e instanceof BasicException)) {
+            message = "服务异常:请联系管理员!";
+        } else {
+            BasicException be = (BasicException) e;
+            httpCode = be.getCode();
+        }
+        ExceptionEntity errorEntity = ExceptionEntity.builder()
                 .message(message)
-                .code(httpCode);
+                .path(request.getRequestURI())
+                .code(httpCode)
+                .error(error);
         return determineOutput(request, response, errorEntity);
     }
 
     /**
      * 异常输出处理
      */
-    private ResultVo determineOutput(HttpServletRequest request, HttpServletResponse response, ResultVo entity) {
+    private ExceptionEntity determineOutput(HttpServletRequest request, HttpServletResponse response, ExceptionEntity entity) {
         //response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         response.setCharacterEncoding("UTF8");
         response.setHeader("Content-Type", "application/json");
         try {
             response.getWriter().write(JSONUtil.toJsonStr(entity));
         } catch (IOException e) {
-            printStackTrace(e);
+            printStackTrace(request, e);
         }
         return null;
     }
@@ -167,10 +177,18 @@ public class GlobalExceptionHandler {
     /**
      * 记录异常信息
      */
-    private void printStackTrace(Exception e) {
-        String traceInfo = getStackTraceInfo(e);
-        System.out.println(traceInfo);
-        //log.error(this.getClass().getSimpleName(),e.getMessage());
+    private void printStackTrace(HttpServletRequest request, Exception e) {
+        boolean isHandleThrow = e instanceof BasicException;
+        if (isHandleThrow) {
+            Object msg = e.getStackTrace()[0];
+            log.error("内部服务器异常(path:{})-{}:{}", request.getRequestURI(), e.getClass().getSimpleName(), msg);
+        } else {
+            log.error("内部服务器异常(path:{})-{}", request.getRequestURI(), e.getClass().getSimpleName(), e);
+        }
+    }
+
+    private void printExceptionMsg(HttpServletRequest request, String expName, String msg) {
+        log.error("内部服务器异常(path:{})-{}:{}", request.getRequestURI(), expName, msg);
     }
 
     /**

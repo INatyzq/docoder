@@ -18,7 +18,7 @@ public abstract class IAuthentication {
      * @param redisUtil
      * @return
      */
-    public abstract boolean requireAuth(HttpServletRequest request,RedisUtil redisUtil);
+    public abstract boolean requireDispatcherAuth(HttpServletRequest request, RedisUtil redisUtil);
 
     /**
      * 返回转发的认证url
@@ -48,7 +48,7 @@ public abstract class IAuthentication {
      * @param userDetailJsonStrLocal
      * @return 用户详情
      */
-    public abstract void setUserDetail(HttpServletRequest request,RedisUtil redisUtil,ThreadLocal<String> userDetailJsonStrLocal);
+   // public abstract void setUserDetail(HttpServletRequest request,RedisUtil redisUtil,ThreadLocal<String> userDetailJsonStrLocal);
 
     /**
      * 返回不需要认证的路径数组

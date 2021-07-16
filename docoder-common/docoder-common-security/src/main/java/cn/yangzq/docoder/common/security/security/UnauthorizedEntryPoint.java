@@ -1,7 +1,7 @@
 package cn.yangzq.docoder.common.security.security;
 
 import cn.hutool.json.JSONUtil;
-import cn.yangzq.docoder.common.core.entity.ExceptionEntity;
+import cn.yangzq.docoder.common.core.handler.ExceptionEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,7 +28,8 @@ public class UnauthorizedEntryPoint implements AuthenticationEntryPoint {
         //响应设置
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-        String exceptionInfo = JSONUtil.toJsonStr(ExceptionEntity.builder().code(HttpStatus.UNAUTHORIZED.value()).error(authException.getClass().getSimpleName()).path(request.getRequestURI()).message(authException.getMessage()));
+        int code = HttpStatus.UNAUTHORIZED.value();
+        String exceptionInfo = JSONUtil.toJsonStr(ExceptionEntity.builder().code(code).error(authException.getClass().getSimpleName()).path(request.getRequestURI()).message(authException.getMessage()));
         response.getWriter().write(exceptionInfo);
         log.error(exceptionInfo);
     }

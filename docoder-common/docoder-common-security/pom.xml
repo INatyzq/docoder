@@ -15,18 +15,17 @@
     <description>docoder 安全访问控制模块</description>
 
     <dependencies>
+        <!-- Spring Security依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
         <!--common-core-->
         <dependency>
             <groupId>cn.yangzq</groupId>
             <artifactId>docoder-common-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-
         <!--jwt-->
         <dependency>
             <groupId>com.auth0</groupId>

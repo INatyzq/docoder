@@ -1,5 +1,6 @@
 package cn.yangzq.docoder.common.mybatis.config;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -36,15 +37,21 @@ public class SqlFilterArgumentResolver implements HandlerMethodArgumentResolver 
      */
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
-        return methodParameter.getParameterType().equals(Page.class);
+        Class<?> parameterType = methodParameter.getParameterType();
+        Class<?> superclass = parameterType.getSuperclass();
+        return parameterType.isAssignableFrom(Page.class)||(superclass.isAssignableFrom(Page.class) && superclass!=Object.class);
     }
 
     @Override
     public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer, NativeWebRequest nativeWebRequest, WebDataBinderFactory webDataBinderFactory) throws Exception {
         HttpServletRequest request = nativeWebRequest.getNativeRequest(HttpServletRequest.class);
 
-        String[] ascs = request.getParameterValues("ascs");
-        String[] descs = request.getParameterValues("descs");
+        String orderBy = request.getParameter("orderBy");
+        String[] orderItem = new String[]{};
+        if(StrUtil.isNotBlank(orderBy)){
+            orderItem = orderBy.split(";");
+        }
+
         String current = request.getParameter("current");
         String size = request.getParameter("size");
 
@@ -58,12 +65,20 @@ public class SqlFilterArgumentResolver implements HandlerMethodArgumentResolver 
         }
 
         List<OrderItem> orderItemList = new ArrayList<>();
-        Optional.ofNullable(ascs).ifPresent(s -> orderItemList.addAll(
-                Arrays.stream(s).filter(sqlInjectPredicate()).map(OrderItem::asc).collect(Collectors.toList())));
-        Optional.ofNullable(descs).ifPresent(s -> orderItemList.addAll(
-                Arrays.stream(s).filter(sqlInjectPredicate()).map(OrderItem::desc).collect(Collectors.toList())));
+        Optional.of(orderItem).ifPresent(orders->{
+            orderItemList.addAll(
+                    Arrays.stream(orders).filter(sqlInjectPredicate()).map(order->{
+                        String[] item = order.split(":");
+                        if(item.length==2){
+                            boolean asc = "asc".equals(item[1]);
+                            return new OrderItem(item[0],asc);
+                        }
+                        return null;
+                    }).collect(Collectors.toList())
+            );
+        });
         page.addOrder(orderItemList);
-        return null;
+        return BeanUtil.copyProperties(page,methodParameter.getParameterType());
     }
 
     /**

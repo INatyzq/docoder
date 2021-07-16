@@ -2,6 +2,7 @@ package cn.yangzq.docoder.user.controller;
 
 
 import cn.yangzq.docoder.common.core.utils.ResultVo;
+import cn.yangzq.docoder.user.entity.PermissionDetail;
 import cn.yangzq.docoder.user.entity.SysPermission;
 import cn.yangzq.docoder.user.form.SysPermissionForm;
 import cn.yangzq.docoder.user.maputil.FormToPoMapper;
@@ -10,7 +11,6 @@ import cn.yangzq.docoder.user.param.RbacParam;
 import cn.yangzq.docoder.user.service.SysPermissionService;
 import cn.yangzq.docoder.user.vo.PermissionTreeVo;
 import cn.yangzq.docoder.user.vo.RbacVo;
-import cn.yangzq.docoder.user.vo.SysPermissionVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class SysPermissionController {
 
     @ApiOperation("获取所有数据")
     @GetMapping("/listAll")
-    public ResultVo<List<SysPermissionVo>> getListAll(){
+    public ResultVo<List<PermissionDetail>> getListAll(){
         List<SysPermission> list = permissionService.list();
         return ResultVo.success(poToVoMapper.permissionList(list));
     }

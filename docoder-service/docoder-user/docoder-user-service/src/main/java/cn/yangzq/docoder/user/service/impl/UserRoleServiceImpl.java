@@ -1,13 +1,11 @@
 package cn.yangzq.docoder.user.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.yangzq.docoder.common.core.exception.BusinessException;
-import cn.yangzq.docoder.common.core.utils.ResultVo;
 import cn.yangzq.docoder.user.entity.RolePermission;
 import cn.yangzq.docoder.user.entity.UserRole;
-import cn.yangzq.docoder.user.form.UserRoleForm;
+import cn.yangzq.docoder.user.form.RbacForm;
 import cn.yangzq.docoder.user.mapper.UserRoleMapper;
 import cn.yangzq.docoder.user.service.RolePermissionService;
 import cn.yangzq.docoder.user.service.UserRoleService;
@@ -36,7 +34,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
     private RolePermissionService rolePermissionService;
 
     @Override
-    public void bindBatch(List<UserRoleForm> forms) {
+    public void bindBatch(List<RbacForm> forms) {
         UpdateWrapper<UserRole> wrapper = new UpdateWrapper<>();
         List<UserRole> insertList = new ArrayList<>();
         forms.forEach(form->{

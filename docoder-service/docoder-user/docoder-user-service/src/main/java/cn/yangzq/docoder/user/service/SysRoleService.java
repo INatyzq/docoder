@@ -1,9 +1,9 @@
 package cn.yangzq.docoder.user.service;
 
 import cn.yangzq.docoder.common.mybatis.utils.Pageable;
+import cn.yangzq.docoder.user.entity.PermissionDetail;
 import cn.yangzq.docoder.user.entity.SysRole;
 import cn.yangzq.docoder.user.param.RbacParam;
-import cn.yangzq.docoder.user.vo.SysPermissionVo;
 import cn.yangzq.docoder.user.vo.SysRoleVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -27,5 +27,5 @@ public interface SysRoleService extends IService<SysRole> {
      * @param page
      * @return
      */
-    Pageable<SysRoleVo> getRbacPage(RbacParam param, Pageable<SysPermissionVo> page);
+    Pageable<SysRoleVo> getRbacPage(RbacParam param, Pageable<PermissionDetail> page);
 }

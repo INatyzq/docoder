@@ -27,9 +27,6 @@ public class ResultVo<T> implements Serializable {
     @ApiModelProperty(value = "响应数据")
     private T data;
 
-    @ApiModelProperty(value = "响应数据")
-    private boolean isHandle = false;
-
     protected ResultVo(){}
 
     private static <T> ResultVo<T> restResult(boolean isSuccess,int code, String msg,T data){
@@ -68,6 +65,14 @@ public class ResultVo<T> implements Serializable {
         return restResult(false,ResultEnum.ERROR.getCode(),ResultEnum.ERROR.getMsg(),null);
     }
 
+    public static <T> ResultVo<T> failed(T data){
+        return restResult(false,ResultEnum.ERROR.getCode(),ResultEnum.ERROR.getMsg(),data);
+    }
+
+    public static <T> ResultVo<T> failed(String msg,T data){
+        return restResult(false,ResultEnum.ERROR.getCode(),msg,data);
+    }
+
     public static <T> ResultVo<T> failed(Integer code, String msg){
         return restResult(false,code,msg,null);
     }
@@ -92,11 +97,6 @@ public class ResultVo<T> implements Serializable {
     @ApiOperation(value = "设置响应数据")
     public ResultVo<T> data(T data){
         this.setData(data);
-        return this;
-    }
-
-    public ResultVo<T> isHandle(boolean handle) {
-        this.isHandle = handle;
         return this;
     }
 
@@ -147,9 +147,4 @@ public class ResultVo<T> implements Serializable {
     public String toString() {
         return JSONUtil.toJsonStr(this);
     }
-
-    public boolean isHandle() {
-        return isHandle;
-    }
-
 }

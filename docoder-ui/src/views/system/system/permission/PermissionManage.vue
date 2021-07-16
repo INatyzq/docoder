@@ -80,7 +80,7 @@
         }
       },
       mounted() {
-        this.listAll();
+        this.getTree();
       },
         data() {
             return {
@@ -88,7 +88,7 @@
                 searchword: '',
                 treeData: [
                     {
-                        title: '根权限',
+                        permissionName: '根权限',
                         id: 0,
                         icon: 'icon-home',
                         expanded: true,
@@ -113,7 +113,6 @@
                     orderNum: 1,
                     dataFlag: 1
                 },
-                permissionList: [],
                 moveId: ''
             }
         },
@@ -130,7 +129,7 @@
                               &nbsp;&nbsp;
                             <vs-icon icon-pack="feather" icon={node.icon} svgClasses="h-4 w-4 mb-1 stroke-current text-primary" />
                           </span>
-                          <span class={titleClass} domPropsInnerHTML={node.title} onClick={() => {
+                          <span class={titleClass} domPropsInnerHTML={node.permissionName} onClick={() => {
                               this.$refs.tree.nodeSelected(node)
                           }}>
                           </span>
@@ -195,7 +194,7 @@
                 postRequest('/user/permission/saveOrUpdate', this.permissionData).then(function (res) {
                     if (res.success) {
                         that.permissionData = that.initData;
-                        that.listAll();
+                        that.getTree();
                         notify.success('操作已完成！');
                     }
                 })
@@ -208,7 +207,7 @@
                 let that = this;
                 postRequest('/user/permission/move',{'id':this.moveId,'parentId':node.id}).then(function (res) {
                     if (res.success) {
-                        that.listAll();
+                        that.getTree();
                         that.moveId = '';
                         notify.success('操作已完成！');
                     }
@@ -222,22 +221,22 @@
                 let that = this;
                 deleteRequest('/user/permission/' + node.id).then(function (res) {
                     if (res.success) {
-                        that.listAll();
+                        that.getTree();
                         notify.success('操作已完成！');
                     }
                 })
             },
-            listAll() {
+            getTree() {
                 this.$vs.loading();
                 let that = this;
-                getRequest('/user/permission/listAll').then(function (res) {
+                getRequest('/user/permission/tree').then(function (res) {
                     if (res.success) {
-                        that.permissionList = res.data;
+                        that.treeData[0].children = res.data;
                         that.renderTree();
                     }
                 })
             },
-            renderTree() {
+            /*renderTree() {
                 let dataList = this.permissionList;
                 let pIdChildren = new Map();
                 dataList.forEach(function (data) {
@@ -271,7 +270,7 @@
                 }
                 this.treeData[0].children = pIdChildren.get(0);
                 pIdChildren = null;
-            }
+            }*/
         }
     }
 </script>

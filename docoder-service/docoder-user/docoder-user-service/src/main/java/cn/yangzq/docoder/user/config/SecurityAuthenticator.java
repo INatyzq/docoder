@@ -25,7 +25,7 @@ public class SecurityAuthenticator extends IAuthentication {
     private DocoderConfig docoderConfig;
 
     @Override
-    public boolean requireAuth(HttpServletRequest request, RedisUtil redisUtil) {
+    public boolean requireDispatcherAuth(HttpServletRequest request, RedisUtil redisUtil) {
         return request.getRequestURI().endsWith(docoderConfig.getDispatcherAuthenticationUrl());
     }
 
@@ -59,7 +59,7 @@ public class SecurityAuthenticator extends IAuthentication {
         redisUtil.expire(tokenCacheKey,expireTime, TimeUnit.SECONDS);
     }
 
-    @Override
+    /*@Override
     public void setUserDetail(HttpServletRequest request, RedisUtil redisUtil,ThreadLocal<String> userDetailJsonStrLocal) {
         String headerVal = request.getHeader(docoderConfig.getTokenHeaderKey());
         String tokenCacheKey = docoderConfig.getWebCacheKeyToken()+headerVal;
@@ -67,7 +67,7 @@ public class SecurityAuthenticator extends IAuthentication {
         String[] tokenVal = token.split("_");
         String userId = tokenVal[0];
         userDetailJsonStrLocal.set(redisUtil.get(docoderConfig.getWebCacheKeyId() + userId));
-    }
+    }*/
 
     @Override
     public List<String> webIgnoring() {

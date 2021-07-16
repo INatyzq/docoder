@@ -5,7 +5,7 @@ import cn.yangzq.docoder.user.entity.SysRole;
 import cn.yangzq.docoder.user.mapper.SysRoleMapper;
 import cn.yangzq.docoder.user.param.RbacParam;
 import cn.yangzq.docoder.user.service.SysRoleService;
-import cn.yangzq.docoder.user.vo.SysPermissionVo;
+import cn.yangzq.docoder.user.entity.PermissionDetail;
 import cn.yangzq.docoder.user.vo.SysRoleVo;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     }
 
     @Override
-    public Pageable<SysRoleVo> getRbacPage(RbacParam param, Pageable<SysPermissionVo> page) {
+    public Pageable<SysRoleVo> getRbacPage(RbacParam param, Pageable<PermissionDetail> page) {
         return roleMapper.selectRbacPage(param,page);
     }
 }

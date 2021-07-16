@@ -264,7 +264,7 @@ export default {
       roleSearch:'',
       permissionTree: [
         {
-          title: '根权限',
+          permissionName: '根权限',
           id: 0,
           icon: 'icon-home',
           expanded: true,
@@ -272,8 +272,7 @@ export default {
         }
       ],
       trees:[],
-      treeSearchword:'',
-      permissionList: []
+      treeSearchword:''
     }
   },
   methods: {
@@ -302,7 +301,7 @@ export default {
       let addShow = configShow && this.clickMode===1 && this.nodeMode === 'role' && !this.rbacPermissions.includes(node.id);
       let deleteShow = configShow && this.clickMode===1 && this.nodeMode === 'role' && this.rbacPermissions.includes(node.id);
       return <span>
-        <span class={titleClass} domPropsInnerHTML={node.title}></span>
+        <span class={titleClass} domPropsInnerHTML={node.permissionName}></span>
         <span style={rootBtnsShow ? '' : 'display:none'}>
         </span>
         <button style={configShow ? '' : 'display:none'} class="btn-delete text-success border-none cursor-pointer px-2 py-1 mr-2 rounded"
@@ -380,7 +379,7 @@ export default {
         children.forEach(node=>this.treeChecked(that,node,checked));
       }
     },
-    renderTree(that) {
+    /*renderTree(that) {
       let dataList = this.permissionList;
       let pIdChildren = new Map();
       dataList.forEach(function (data) {
@@ -418,7 +417,7 @@ export default {
       }
       this.permissionTree[0].children = pIdChildren.get(0);
       pIdChildren = null;
-    },
+    },*/
     modeClick(clickMode,nodeMode,id,indextr) {
       this.clickMode = clickMode;
       this.nodeMode = nodeMode;
@@ -574,12 +573,12 @@ export default {
       allIds = allIds.map(id=>id);
       allIds = Array.from(new Set(allIds));
       let actions = [];
-      allIds.filter(id=>id!=='0').forEach(id=>{
+      allIds.filter(id=>id!==0).forEach(id=>{
         if(!this.rbacPermissions.includes(id)){
           actions.push({'roleId':roleId,'permissionId':id,'action':1})
         }
       })
-      this.rbacPermissions.filter(id=>id!=='-1').forEach(id=>{
+      this.rbacPermissions.filter(id=>id!==0).forEach(id=>{
         if(!allIds.includes(id)){
           actions.push({'roleId':roleId,'permissionId':id,'action':0})
         }

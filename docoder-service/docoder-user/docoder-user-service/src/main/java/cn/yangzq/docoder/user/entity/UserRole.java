@@ -34,9 +34,6 @@ public class UserRole implements Serializable {
     @ApiModelProperty(value = "角色id")
     private Integer roleId;
 
-    @ApiModelProperty(value = "有效标识,0:无效,1:有效")
-    private Integer status;
-
     @ApiModelProperty(value = "创建者")
     private Integer createdBy;
 

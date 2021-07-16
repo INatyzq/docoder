@@ -1,5 +1,6 @@
 package cn.yangzq.docoder.common.swagger.config;
 
+import cn.yangzq.docoder.common.swagger.annotation.IgnoreSwaggerParameter;
 import com.fasterxml.classmate.ResolvedType;
 import com.fasterxml.classmate.members.ResolvedField;
 import com.fasterxml.classmate.members.ResolvedMethod;
@@ -9,14 +10,11 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Sets;
-import cn.yangzq.docoder.common.swagger.annotation.IgnoreSwaggerParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.schema.Maps;
@@ -56,8 +54,8 @@ import static springfox.documentation.schema.Types.typeNameFor;
 *@author yangzq
 *@description 覆盖{@link ModelAttributeParameterExpander}
 **/
-@Component
-@Primary
+//@Component
+//@Primary
 public class CustomizeModelAttributeParameterExpander extends ModelAttributeParameterExpander {
     private static final Logger LOG = LoggerFactory.getLogger(ModelAttributeParameterExpander.class);
     private final FieldProvider fields;

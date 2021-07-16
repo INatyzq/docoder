@@ -2,7 +2,7 @@ package cn.yangzq.docoder.user.controller;
 
 
 import cn.yangzq.docoder.common.core.utils.ResultVo;
-import cn.yangzq.docoder.user.form.UserRoleForm;
+import cn.yangzq.docoder.user.form.RbacForm;
 import cn.yangzq.docoder.user.service.UserRoleService;
 import cn.yangzq.docoder.user.vo.RbacVo;
 import io.swagger.annotations.Api;
@@ -30,7 +30,7 @@ public class UserRoleController {
 
     @ApiOperation("批量绑定用户和角色的关系")
     @PostMapping("/bindBatch")
-    public ResultVo<Object> bindBatch(@RequestBody List<UserRoleForm> forms){
+    public ResultVo<Object> bindBatch(@RequestBody List<RbacForm> forms){
         userRoleService.bindBatch(forms);
         return ResultVo.success();
     }

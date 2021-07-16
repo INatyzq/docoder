@@ -1,7 +1,7 @@
 package cn.yangzq.docoder.user.service.impl;
 
 import cn.yangzq.docoder.user.entity.RolePermission;
-import cn.yangzq.docoder.user.form.UserRoleForm;
+import cn.yangzq.docoder.user.form.RbacForm;
 import cn.yangzq.docoder.user.mapper.RolePermissionMapper;
 import cn.yangzq.docoder.user.service.RolePermissionService;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -25,7 +25,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
     private RolePermissionMapper rolePermissionMapper;
 
     @Override
-    public void bindBatch(List<UserRoleForm> forms) {
+    public void bindBatch(List<RbacForm> forms) {
         UpdateWrapper<RolePermission> wrapper = new UpdateWrapper<>();
         List<RolePermission> insertList = new ArrayList<>();
         forms.forEach(form->{

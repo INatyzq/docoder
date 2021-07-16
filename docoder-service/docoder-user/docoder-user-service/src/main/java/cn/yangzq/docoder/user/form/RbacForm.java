@@ -12,7 +12,7 @@ import java.io.Serializable;
 **/
 @ApiModel("用户和角色关系Form")
 @Data
-public class UserRoleForm implements Serializable {
+public class RbacForm implements Serializable {
 
     private static final long serialVersionUID = 6492822103447369429L;
 

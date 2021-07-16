@@ -5,21 +5,19 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
 import cn.yangzq.docoder.common.core.utils.ResultVo;
 import cn.yangzq.docoder.common.mybatis.utils.Pageable;
+import cn.yangzq.docoder.user.entity.PermissionDetail;
 import cn.yangzq.docoder.user.entity.SysRole;
 import cn.yangzq.docoder.user.form.SysRoleForm;
 import cn.yangzq.docoder.user.maputil.FormToPoMapper;
 import cn.yangzq.docoder.user.param.RbacParam;
 import cn.yangzq.docoder.user.service.SysRoleService;
-import cn.yangzq.docoder.user.vo.SysPermissionVo;
 import cn.yangzq.docoder.user.vo.SysRoleVo;
-import cn.yangzq.docoder.user.vo.SysUserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
 *@author yangzq
@@ -67,7 +65,7 @@ public class SysRoleController {
 
     @ApiOperation("基于rbac的分页查询")
     @GetMapping("/rbacPage")
-    public ResultVo<Pageable<SysRoleVo>> getRbacPage(RbacParam param, Pageable<SysPermissionVo> page){
+    public ResultVo<Pageable<SysRoleVo>> getRbacPage(RbacParam param, Pageable<PermissionDetail> page){
         return ResultVo.success(roleService.getRbacPage(param,page));
     }
 }

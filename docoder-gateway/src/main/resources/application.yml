@@ -1,0 +1,59 @@
+#端口号
+server:
+  port: 9000
+
+#应用名
+spring:
+  application:
+    name: @artifactId@
+  profiles:
+    active: dev
+  #nacos服务地址
+  cloud:
+    gateway:
+      # 跨域
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedHeaders: "*"
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+                POST
+                DELETE
+                PUT
+                OPTION
+      default-filters[0] : DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_FIRST
+      discovery:
+        locator:
+          # 是否和服务注册与发现组件结合，设置为 true 后可以直接使用应用名称调用服务
+          enabled: true
+      routes:
+        - id: docoder-user-service
+          uri: lb://docoder-user-service/docoder/user
+          predicates:
+            - Path=/docoder/user/**
+        - id: docoder-content-service
+          uri: lb://docoder-content-service/docoder/content
+          predicates:
+            - Path=/docoder/content/**
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      #config:
+        #server-addr: 127.0.0.1:8848
+
+dubbo:
+  scan:
+    base-packages: cn.yangzq.docoder.user.service
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    address: spring-cloud://localhost
+    #application:
+    #qos-enable: true
+  cloud:
+    subscribed-services: docoder-base-service,docoder-user-service
+  consumer:
+    check: false

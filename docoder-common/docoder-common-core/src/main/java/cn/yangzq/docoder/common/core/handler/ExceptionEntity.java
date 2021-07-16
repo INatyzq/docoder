@@ -1,8 +1,8 @@
-package cn.yangzq.docoder.common.core.entity;
+package cn.yangzq.docoder.common.core.handler;
 
-import cn.hutool.crypto.SecureUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -22,16 +22,13 @@ public class ExceptionEntity implements Serializable {
     private int code;
 
     @ApiModelProperty("异常消息")
-    private String message;
+    private Object message;
 
     @ApiModelProperty("异常类型")
     private String error;
 
     @ApiModelProperty("异常调用路径")
     private String path;
-
-    @ApiModelProperty("是否需要处理")
-    private boolean isHandle;
 
     @ApiModelProperty("异常调用时间戳")
     private Date timestamp = new Date();
@@ -76,11 +73,11 @@ public class ExceptionEntity implements Serializable {
         this.code = code;
     }
 
-    public String getMessage() {
+    public Object getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(Object message) {
         this.message = message;
     }
 
@@ -93,7 +90,7 @@ public class ExceptionEntity implements Serializable {
     }
 
     public String getPath() {
-        return SecureUtil.des("uyeek_path".getBytes()).encrypt(path).toString();
+        return path;
     }
 
     public void setPath(String path) {
@@ -108,11 +105,4 @@ public class ExceptionEntity implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public boolean isHandle() {
-        return isHandle;
-    }
-
-    public void setHandle(boolean handle) {
-        isHandle = handle;
-    }
 }

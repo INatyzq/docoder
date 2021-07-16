@@ -1,6 +1,6 @@
 package cn.yangzq.docoder.base.mapper;
 
-import cn.yangzq.docoder.base.entity.po.SysAttachment;
+import cn.yangzq.docoder.base.entity.SysAttachment;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

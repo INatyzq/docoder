@@ -102,7 +102,7 @@
     <resultMap id="userDetailMap" type="cn.yangzq.docoder.user.vo.UserDetailVO">
         <result column="id" property="id"/>
         <association property="feature" javaType="cn.yangzq.docoder.user.vo.UserFeatureVo" column="id" select="selectUserFeatureByUserId"/>
-        <collection property="permissionList" ofType="cn.yangzq.docoder.user.vo.SysPermissionVo" column="id" select="selectPermissionListByUserId"/>
+        <collection property="permissionList" ofType="cn.yangzq.docoder.user.entity.PermissionDetail" column="id" select="selectPermissionListByUserId"/>
     </resultMap>
     <select id="selectUserDetail" resultMap="userDetailMap">
         select
@@ -111,12 +111,12 @@
         where id = #{userId,jdbcType=INTEGER} or user_name = #{userName,jdbcType=VARCHAR}
     </select>
 
-    <select id="selectPermissionListByUserId" parameterType="integer" resultType="cn.yangzq.docoder.user.vo.SysPermissionVo">
+    <select id="selectPermissionListByUserId" parameterType="integer" resultType="cn.yangzq.docoder.user.entity.PermissionDetail">
         SELECT
             sp.id, parent_id, permission_name, permission_type, permission_desc, resource_url, icon, order_num, sp.status
         FROM user_role ur
         inner join sys_role sr
-        on ur.role_id = sr.id and ur.status = 1
+        on ur.role_id = sr.id
         inner join role_permission rp
         on sr.id = rp.role_id
         inner join sys_permission sp

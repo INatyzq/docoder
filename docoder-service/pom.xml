@@ -17,6 +17,7 @@
     <modules>
         <module>docoder-base</module>
         <module>docoder-user</module>
+        <module>docoder-content</module>
     </modules>
 
     <dependencies>
