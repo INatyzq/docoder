@@ -6,9 +6,8 @@ import cn.yangzq.docoder.user.form.UserLoginForm;
 import cn.yangzq.docoder.user.form.UserRegisterForm;
 import cn.yangzq.docoder.user.param.RbacParam;
 import cn.yangzq.docoder.user.vo.SysUserVo;
-import cn.yangzq.docoder.user.vo.UserAuthDetailVO;
 import cn.yangzq.docoder.common.mybatis.utils.Pageable;
-import cn.yangzq.docoder.user.vo.UserDetailVO;
+import cn.yangzq.docoder.user.vo.UserDetailVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -31,21 +30,21 @@ public interface SysUserService extends IService<SysUser> {
      * @param form
      * @return
      */
-    UserAuthDetailVO login(UserLoginForm form);
+    UserDetailVo login(UserLoginForm form);
 
     /**
      * 获取用户详情
      * @param userId
      * @return
      */
-    UserDetailVO getUserDetail(Integer userId);
+    UserDetailVo getUserDetail(Integer userId);
 
     /**
      * 获取用户详情
      * @param userName
      * @return
      */
-    UserDetailVO getUserDetail(String userName);
+    UserDetailVo getUserDetail(String userName);
 
     /**
      * 获取用户分页列表
@@ -60,7 +59,7 @@ public interface SysUserService extends IService<SysUser> {
      * @param id
      * @return
      */
-    UserAuthDetailVO refresh(Integer id);
+    UserDetailVo refresh(Integer id);
 
     /**
      * 基于rbac的分页查询

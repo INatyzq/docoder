@@ -99,7 +99,7 @@
         su.created_time
     </select>
 
-    <resultMap id="userDetailMap" type="cn.yangzq.docoder.user.vo.UserDetailVO">
+    <resultMap id="userDetailMap" type="cn.yangzq.docoder.user.vo.UserDetailVo">
         <result column="id" property="id"/>
         <association property="feature" javaType="cn.yangzq.docoder.user.vo.UserFeatureVo" column="id" select="selectUserFeatureByUserId"/>
         <collection property="permissionList" ofType="cn.yangzq.docoder.user.entity.PermissionDetail" column="id" select="selectPermissionListByUserId"/>

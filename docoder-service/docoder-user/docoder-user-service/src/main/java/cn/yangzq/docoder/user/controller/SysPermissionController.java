@@ -38,7 +38,7 @@ public class SysPermissionController {
     @GetMapping("/listAll")
     public ResultVo<List<PermissionDetail>> getListAll(){
         List<SysPermission> list = permissionService.list();
-        return ResultVo.success(poToVoMapper.permissionList(list));
+        return ResultVo.success(poToVoMapper.toPermissionDetailList(list));
     }
 
     @ApiOperation("获取树形数据")
@@ -50,7 +50,7 @@ public class SysPermissionController {
     @ApiOperation("保存或更新")
     @PostMapping("/saveOrUpdate")
     public ResultVo<Object> saveOrUpdate(@RequestBody SysPermissionForm form){
-        SysPermission permission = formToPoMapper.sysPermissionForm(form);
+        SysPermission permission = formToPoMapper.toSysPermission(form);
         permissionService.saveOrUpdate(permission);
         return ResultVo.success();
     }
@@ -58,7 +58,7 @@ public class SysPermissionController {
     @ApiOperation("移动节点")
     @PostMapping("/move")
     public ResultVo<Object> moveNode(@RequestBody SysPermissionForm form){
-        SysPermission permission = formToPoMapper.sysPermissionForm(form);
+        SysPermission permission = formToPoMapper.toSysPermission(form);
         permissionService.updateById(permission);
         return ResultVo.success();
     }

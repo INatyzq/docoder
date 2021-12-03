@@ -12,7 +12,7 @@ import java.io.Serializable;
 **/
 @ApiModel("注册前必要属性")
 @Data
-public class RegisterPrepareVO implements Serializable {
+public class RegisterPrepareVo implements Serializable {
     private static final long serialVersionUID = -596664140893208972L;
 
     @ApiModelProperty("随机操作码")

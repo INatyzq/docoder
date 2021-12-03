@@ -5,7 +5,7 @@ import cn.yangzq.docoder.user.entity.PermissionDetail;
 import cn.yangzq.docoder.user.entity.SysUser;
 import cn.yangzq.docoder.user.param.RbacParam;
 import cn.yangzq.docoder.user.vo.SysUserVo;
-import cn.yangzq.docoder.user.vo.UserDetailVO;
+import cn.yangzq.docoder.user.vo.UserDetailVo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,5 +19,5 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
 
     Pageable<SysUserVo> selectRbacPage(@Param("param")RbacParam param, @Param("page")Pageable<PermissionDetail> page);
 
-    UserDetailVO selectUserDetail(@Param("userId") Integer userId,@Param("userName") String userName);
+    UserDetailVo selectUserDetail(@Param("userId") Integer userId, @Param("userName") String userName);
 }

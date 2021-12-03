@@ -1,0 +1,13 @@
+#端口号
+server:
+  port: 9000
+spring:
+  application:
+    name: @artifactId@
+  profiles:
+    active: @profiles.active@
+
+
+#logging:
+#  level:
+#    cn.com.lays.heartbeat: debug

@@ -22,7 +22,6 @@
         <module>docoder-gateway</module>
         <module>docoder-infrastructure</module>
         <module>docoder-service</module>
-        <module>docoder-security</module>
     </modules>
 
     <properties>
@@ -36,6 +35,7 @@
         <spring-cloud-gateway.version>2.2.6.RELEASE</spring-cloud-gateway.version>
         <cloud-alibaba.version>2.2.3.RELEASE</cloud-alibaba.version>
         <mybatis-plus.version>3.4.1</mybatis-plus.version>
+        <sa-token.version>1.27.0</sa-token.version>
         <druid.version>1.1.16</druid.version>
         <velocity.version>2.0</velocity.version>
         <ok-http.version>4.9.0</ok-http.version>
@@ -43,7 +43,6 @@
         <guava.version>29.0-jre</guava.version>
         <hutool.version>5.5.1</hutool.version>
         <poi.version>4.1.2</poi.version>
-        <jwt.version>3.10.0</jwt.version>
         <mapstruct.version>1.3.0.Final</mapstruct.version>
         <lombok.version>1.18.10</lombok.version>
         <easy-captcha.version>1.6.2</easy-captcha.version>
@@ -138,10 +137,6 @@
                 <!-- 环境标识，需要与配置文件的名称相对应 -->
                 <profiles.active>test</profiles.active>
             </properties>
-            <activation>
-                <!-- 默认环境 -->
-                <activeByDefault>true</activeByDefault>
-            </activation>
         </profile>
     </profiles>
 </project>

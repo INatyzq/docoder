@@ -35,16 +35,16 @@
 			<artifactId>docoder-common-core</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<!--common-security-->
-		<dependency>
-			<groupId>cn.yangzq</groupId>
-			<artifactId>docoder-common-security</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 		<!--common-mybatis-->
 		<dependency>
 			<groupId>cn.yangzq</groupId>
 			<artifactId>docoder-common-mybatis</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<!--common-security-->
+		<dependency>
+			<groupId>cn.yangzq</groupId>
+			<artifactId>docoder-common-security</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<!--common-swagger-->

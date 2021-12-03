@@ -42,7 +42,7 @@ public class SysRoleController {
     @ApiOperation("单条新增或修改")
     @PostMapping("/saveOrUpdate")
     public ResultVo<Object> saveOrUpdate(@RequestBody SysRoleForm form){
-        SysRole role = formToPoMapper.roleForm(form);
+        SysRole role = formToPoMapper.toSysRole(form);
         roleService.saveOrUpdate(role);
         return ResultVo.success();
     }
@@ -50,7 +50,7 @@ public class SysRoleController {
     @ApiOperation("批量新增或修改")
     @PostMapping("/saveOrUpdateBatch")
     public ResultVo<Object> saveOrUpdate(@RequestBody List<SysRoleForm> forms){
-        List<SysRole> roles = formToPoMapper.roleListForm(forms);
+        List<SysRole> roles = formToPoMapper.toSysRoleList(forms);
         roleService.saveOrUpdateBatch(roles);
         return ResultVo.success();
     }

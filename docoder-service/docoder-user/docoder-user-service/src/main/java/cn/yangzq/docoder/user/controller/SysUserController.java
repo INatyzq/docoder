@@ -17,7 +17,7 @@ import cn.yangzq.docoder.user.common.FilePath;
 import cn.yangzq.docoder.user.config.DocoderConfig;
 import cn.yangzq.docoder.user.entity.PermissionDetail;
 import cn.yangzq.docoder.user.vo.SysUserVo;
-import cn.yangzq.docoder.user.vo.UserDetailVO;
+import cn.yangzq.docoder.user.vo.UserDetailVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,12 +88,12 @@ public class SysUserController {
     @ApiOperation("通过ID获取用户详情")
     @GetMapping("/{id}")
     public ResultVo<SysUserVo> getUser(@PathVariable("id") Integer id){
-        return ResultVo.success(poToVoMapper.userVo(userService.getById(id)));
+        return ResultVo.success(poToVoMapper.toSysUserVo(userService.getById(id)));
     }
 
     @ApiOperation("通过ID获取用户详情")
     @GetMapping("/getUserDetail/{id}")
-    public ResultVo<UserDetailVO> getUserDetail(@PathVariable("id") Integer id){
+    public ResultVo<UserDetailVo> getUserDetail(@PathVariable("id") Integer id){
         return ResultVo.success(userService.getUserDetail(id));
     }
 

@@ -7,15 +7,17 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.yangzq.docoder.base.api.IActionCodeService;
 import cn.yangzq.docoder.base.api.ISecurityService;
+import cn.yangzq.docoder.user.config.UserContextHolder;
 import cn.yangzq.docoder.user.entity.SysUser;
+import cn.yangzq.docoder.user.entity.UserDetail;
 import cn.yangzq.docoder.user.form.UserLoginForm;
 import cn.yangzq.docoder.user.form.UserRegisterForm;
 import cn.yangzq.docoder.user.service.SysUserService;
-import cn.yangzq.docoder.user.vo.RegisterPrepareVO;
-import cn.yangzq.docoder.user.vo.UserAuthDetailVO;
+import cn.yangzq.docoder.user.vo.RegisterPrepareVo;
 import cn.yangzq.docoder.common.core.exception.ValidateException;
 import cn.yangzq.docoder.common.core.utils.ResultVo;
 import cn.yangzq.docoder.user.maputil.FormToPoMapper;
+import cn.yangzq.docoder.user.vo.UserDetailVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -46,26 +48,30 @@ public class LoginController {
 
     @ApiOperation("注册前数据准备")
     @GetMapping("/registerPrepare")
-    public ResultVo<RegisterPrepareVO> registerPrepare(){
+    public ResultVo<RegisterPrepareVo> registerPrepare(){
         return ResultVo.success(prepare());
     }
 
     @ApiOperation("刷新注册码")
     @GetMapping("/refreshCaptcha/{registerCode}")
-    public ResultVo<RegisterPrepareVO> refreshCaptcha(@PathVariable String registerCode){
+    public ResultVo<RegisterPrepareVo> refreshCaptcha(@PathVariable String registerCode){
         actionCodeService.delete(registerCode);
         return ResultVo.success(prepare());
     }
 
     @ApiOperation("登录")
     @PostMapping("/login")
-    public ResultVo<UserAuthDetailVO> login(@RequestBody UserLoginForm form){
+    public ResultVo<UserDetailVo> login(@RequestBody UserLoginForm form){
+        UserContextHolder.login("yzq20211203");
+        UserContextHolder.storeUserInPrincipal("{'userName':'yzq'}");
+        UserDetail currentUser = UserContextHolder.getCurrentUser();
+        System.out.println(currentUser);
         return ResultVo.success(userService.login(form));
     }
 
     @ApiOperation("刷新用户信息")
     @GetMapping("/refresh/{id}")
-    public ResultVo<UserAuthDetailVO> refresh(@PathVariable("id") Integer id){
+    public ResultVo<UserDetailVo> refresh(@PathVariable("id") Integer id){
         return ResultVo.success(userService.refresh(id));
     }
 
@@ -90,7 +96,7 @@ public class LoginController {
             message.set("captcha","验证码不正确！");
             throw new ValidateException(message.toString(),true);
         }
-        SysUser sysUser = formToPoMapper.registerForm(form);
+        SysUser sysUser = formToPoMapper.toSysUser(form);
         sysUser.setUserPwd(SecureUtil.md5(sysUser.getUserPwd()));
         userService.save(sysUser);
         return ResultVo.success();
@@ -99,10 +105,10 @@ public class LoginController {
     /**
      * 注册前需要的数据
      */
-    private RegisterPrepareVO prepare(){
+    private RegisterPrepareVo prepare(){
         Map<String, String> captchaMap = securityService.getCaptchaBase64();
         String actionCode = actionCodeService.getActionCode(captchaMap.get("text"));
-        RegisterPrepareVO prepare = new RegisterPrepareVO();
+        RegisterPrepareVo prepare = new RegisterPrepareVo();
         prepare.setRandomCode(actionCode);
         prepare.setCaptchaStr(captchaMap.get("captcha"));
         return prepare;

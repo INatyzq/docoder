@@ -18,13 +18,13 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface FormToPoMapper {
 
-    SysUser loginForm(UserLoginForm loginForm);
+    SysUser toSysUser(UserLoginForm loginForm);
 
-    SysUser registerForm(UserRegisterForm registerForm);
+    SysUser toSysUser(UserRegisterForm registerForm);
 
-    List<SysRole> roleListForm(List<SysRoleForm> form);
+    List<SysRole> toSysRoleList(List<SysRoleForm> form);
 
-    SysRole roleForm(SysRoleForm form);
+    SysRole toSysRole(SysRoleForm form);
 
-    SysPermission sysPermissionForm(SysPermissionForm form);
+    SysPermission toSysPermission(SysPermissionForm form);
 }

@@ -32,7 +32,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
     @Override
     public List<PermissionDetail> getUserPermissionList(Integer userId) {
         List<SysPermission> permissionList = permissionMapper.selectUserPermissionList(userId);
-        return poToVoMapper.permissionList(permissionList);
+        return poToVoMapper.toPermissionDetailList(permissionList);
     }
 
     @Override

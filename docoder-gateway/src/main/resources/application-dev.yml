@@ -1,15 +1,12 @@
-#端口号
-server:
-  port: 9000
-
 #应用名
 spring:
-  application:
-    name: @artifactId@
-  profiles:
-    active: dev
   #nacos服务地址
   cloud:
+    nacos:
+      discovery:
+        server-addr: 47.106.119.6:8848
+        #config:
+        #server-addr: 127.0.0.1:8848
     gateway:
       # 跨域
       globalcors:
@@ -37,23 +34,3 @@ spring:
           uri: lb://docoder-content-service/docoder/content
           predicates:
             - Path=/docoder/content/**
-    nacos:
-      discovery:
-        server-addr: 127.0.0.1:8848
-      #config:
-        #server-addr: 127.0.0.1:8848
-
-dubbo:
-  scan:
-    base-packages: cn.yangzq.docoder.user.service
-  protocol:
-    name: dubbo
-    port: -1
-  registry:
-    address: spring-cloud://localhost
-    #application:
-    #qos-enable: true
-  cloud:
-    subscribed-services: docoder-base-service,docoder-user-service
-  consumer:
-    check: false

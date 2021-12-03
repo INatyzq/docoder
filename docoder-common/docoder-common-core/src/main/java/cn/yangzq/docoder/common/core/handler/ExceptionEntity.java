@@ -24,6 +24,11 @@ public class ExceptionEntity implements Serializable {
     @ApiModelProperty("异常消息")
     private Object message;
 
+    @ApiModelProperty("数据")
+    private Object data;
+
+    private boolean isHandle;
+
     @ApiModelProperty("异常类型")
     private String error;
 
@@ -37,31 +42,41 @@ public class ExceptionEntity implements Serializable {
     /**
      * builder
      */
-    public static ExceptionEntity builder(){
+    public static ExceptionEntity builder() {
         return new ExceptionEntity();
     }
 
-    public ExceptionEntity code(int code){
+    public ExceptionEntity code(int code) {
         this.code = code;
         return this;
     }
 
-    public ExceptionEntity error(String error){
+    public ExceptionEntity error(String error) {
         this.error = error;
         return this;
     }
 
-    public ExceptionEntity message(String message){
+    public ExceptionEntity message(String message) {
         this.message = message;
         return this;
     }
 
-    public ExceptionEntity path(String path){
+    public ExceptionEntity path(String path) {
         this.path = path;
         return this;
     }
 
-    public boolean getSuccess() {
+    public ExceptionEntity data(Object data) {
+        this.data = data;
+        return this;
+    }
+
+    public ExceptionEntity isHandle(boolean isHandle) {
+        this.isHandle = isHandle;
+        return this;
+    }
+
+    public boolean isSuccess() {
         return success;
     }
 
@@ -79,6 +94,22 @@ public class ExceptionEntity implements Serializable {
 
     public void setMessage(Object message) {
         this.message = message;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
+
+    public boolean isHandle() {
+        return isHandle;
+    }
+
+    public void setHandle(boolean handle) {
+        isHandle = handle;
     }
 
     public String getError() {
@@ -104,5 +135,4 @@ public class ExceptionEntity implements Serializable {
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
-
 }

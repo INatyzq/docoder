@@ -13,11 +13,6 @@
     <description>docoder服务网关 基于spring cloud gateway</description>
 
     <dependencies>
-        <dependency>
-            <groupId>cn.yangzq</groupId>
-            <artifactId>docoder-user-api</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
         <!--hutool-->
         <dependency>
             <groupId>cn.hutool</groupId>
@@ -35,11 +30,6 @@
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
-        <!--dubbo-->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-dubbo</artifactId>
         </dependency>
     </dependencies>
 

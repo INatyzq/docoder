@@ -1,7 +1,9 @@
 package cn.yangzq.docoder.common.core.handler;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import cn.yangzq.docoder.common.core.exception.BasicException;
+import cn.yangzq.docoder.common.core.handler.ExceptionEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
@@ -14,9 +16,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -145,17 +145,25 @@ public class GlobalExceptionHandler {
     private ExceptionEntity commonHandler(HttpServletRequest request, HttpServletResponse response,
                                           String error, int httpCode, String message, Exception e) {
 
+        Object data = null;
+        boolean isHandle = false;
         if (!(e instanceof BasicException)) {
             message = "服务异常:请联系管理员!";
         } else {
             BasicException be = (BasicException) e;
             httpCode = be.getCode();
+            data = be.getData();
+            isHandle = be.isHandle();
         }
         ExceptionEntity errorEntity = ExceptionEntity.builder()
                 .message(message)
                 .path(request.getRequestURI())
                 .code(httpCode)
-                .error(error);
+                .error(error)
+                .isHandle(isHandle);
+        if(data!=null){
+            errorEntity = errorEntity.data(data);
+        }
         return determineOutput(request, response, errorEntity);
     }
 
@@ -179,11 +187,13 @@ public class GlobalExceptionHandler {
      */
     private void printStackTrace(HttpServletRequest request, Exception e) {
         boolean isHandleThrow = e instanceof BasicException;
+        String simpleName = e.getClass().getSimpleName();
         if (isHandleThrow) {
-            Object msg = e.getStackTrace()[0];
-            log.error("内部服务器异常(path:{})-{}:{}", request.getRequestURI(), e.getClass().getSimpleName(), msg);
+            String msg = StrUtil.blankToDefault(e.getMessage(), "");
+            String firstStack = e.getStackTrace().length > 0 ? e.getStackTrace()[0].toString() : "";
+            log.error("内部服务器异常(path:{})-{}:{}", request.getRequestURI(), simpleName, firstStack + ":" + msg);
         } else {
-            log.error("内部服务器异常(path:{})-{}", request.getRequestURI(), e.getClass().getSimpleName(), e);
+            log.error("内部服务器异常(path:{})-{}", request.getRequestURI(), simpleName, e);
         }
     }
 

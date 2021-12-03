@@ -16,7 +16,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @ApiModel("用户详情")
 @Data
-public class UserDetailVO extends SysUserVo implements Serializable {
+public class UserDetailVo extends SysUserVo implements Serializable {
 
     private static final long serialVersionUID = -1434300466895349995L;
 
@@ -25,4 +25,10 @@ public class UserDetailVO extends SysUserVo implements Serializable {
 
     @ApiModelProperty("用户特性")
     private UserFeatureVo feature;
+
+    @ApiModelProperty("token")
+    private String token;
+
+    @ApiModelProperty("记住我")
+    private Boolean rememberMe;
 }

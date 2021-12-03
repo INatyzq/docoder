@@ -1,7 +1,5 @@
 package cn.yangzq.docoder.user.maputil;
 
-import cn.yangzq.docoder.user.vo.UserAuthDetailVO;
-import cn.yangzq.docoder.user.vo.UserDetailVO;
 import org.mapstruct.Mapper;
 
 
@@ -12,6 +10,5 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface VoToVoMapper {
 
-    UserAuthDetailVO userDetail(UserDetailVO detail);
 
 }

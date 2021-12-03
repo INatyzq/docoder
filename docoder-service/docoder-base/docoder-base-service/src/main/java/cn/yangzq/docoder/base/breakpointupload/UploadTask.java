@@ -42,8 +42,8 @@ import java.util.concurrent.Future;
 @Component
 public class UploadTask {
 
-    @Autowired
-    private FTPUtil ftpUtil;
+    //@Autowired
+    private FTPUtil ftpUtil = new FTPUtil();
     @Autowired
     private SysAttachmentService attachmentService;
     @DubboReference

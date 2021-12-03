@@ -1,5 +1,5 @@
 server:
-  port: 9001
+  port: 9002
   servlet:
     context-path: /docoder
 
@@ -32,12 +32,12 @@ spring:
     nacos:
       discovery:
         enabled: true
-        server-addr: 127.0.0.1:8848
+        server-addr: 47.106.119.6:8848
         register-enabled: true
   redis:
     database: 0
-    host: 127.0.0.1
-    port: 6379
+    host: 47.106.119.6
+    port: 7480
     password: 123456
 
 mybatis-plus:
@@ -67,12 +67,21 @@ dubbo:
     check: false
 
 
-docoder:
-  data_dir: D:\workspace\project\docoder_data
-  token_time_second: 86400000
-  token_time_rememberme_second: 604800000
-  dispatcher_authentication_url: /user/login
-  token_header_key: web_token
-  web_cache_key_id: 'AUTH:WEB:ID:'
-  web_cache_key_token: 'AUTH:WEB:TOKEN:'
+sa-token:
+  # token名称 (同时也是cookie名称)
+  token-name: dctoken
+  # token前缀
+  token-prefix: 'Bear '
+  # token有效期，单位s 默认30天, -1代表永不过期
+  timeout: 604800
+  # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+  activity-timeout: -1
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: true
+  # token风格
+  token-style: tik
+  # 是否输出操作日志
+  is-log: false
 
